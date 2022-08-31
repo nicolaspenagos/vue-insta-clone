@@ -1,8 +1,6 @@
 <template>
-    <img  class="loginImage " :class="imageName" :src="path"  @error="noImageFound"  v-if="imageURLOk">
-    <div class="loginImage loginImage--div" v-else>
-
-    </div>
+    <img  class="loginImage shadow" :class="imageName" :src="path"  @error="noImageFound"  v-if="imageURLOk">
+    <div class="loginImage loginImage--div shadow" :class="imageName" v-else></div>
 </template>
 
 <script>
@@ -29,15 +27,18 @@
         }
     }
 </script>
+
 <style lang="scss" scoped>
 .loginImage{
     width: 140px;
     height: 140px;
     margin: 8px;
     &--div{
-        background-color: lightgray;
+        background-color: #dbdada;
     }
-   // background-color: black;
+}
 
+.img7{
+    opacity: 50%;
 }
 </style>

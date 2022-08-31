@@ -1,8 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-
-
-
 </script>
 
 
@@ -15,7 +12,12 @@ import { RouterLink, RouterView } from "vue-router";
 
 
 <style lang="scss">
+  
 $background-color: #F2F2F2;
+$insta-blue: #3F94EF;
+$insta-black: #212121;
+$light-gray: #D9D9D9;
+
 .main {
   background-color: $background-color;
   width: 100%;
@@ -27,8 +29,24 @@ $background-color: #F2F2F2;
   align-items: center;
 }
 
+.text{
+  &--blue{
+    color: $insta-blue;
+    &:hover{
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
 .container{
   display: flex;
-  //background: white;
+  background: white;
+  margin: 8px;
 }
+
+.shadow{
+   box-shadow: rgba(99, 99, 99, 0.08) 0px 2px 8px 0px;
+}
+
 </style>
