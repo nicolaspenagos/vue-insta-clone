@@ -1,6 +1,6 @@
 <template>
-    <img  class="loginImage shadow" :class="imageName" :src="path"  @error="noImageFound"  v-if="imageURLOk">
-    <div class="loginImage loginImage--div shadow" :class="imageName" v-else></div>
+    <img  data-aos="fade-right" :data-aos-duration="animDuration" class="loginImage shadow" :class="imageName" :src="path"  @error="noImageFound"  v-if="imageURLOk">
+    <div  data-aos="fade-right" :data-aos-duration="animDuration" class="loginImage loginImage--div shadow" :class="imageName" v-else></div>
 </template>
 
 <script>
@@ -23,6 +23,14 @@
         computed:{
             path(){
                 return './'+this.imageName+'.png';
+            },
+            animDuration(){
+                let i = this.imageName.split('g')[1];
+                let duration = 500+(parseInt(1)*200);
+                console.log(duration);
+                console.log(this.imageName)
+                console.log('--');
+                return duration;
             }
         }
     }
@@ -34,7 +42,7 @@
     height: 140px;
     margin: 8px;
     &--div{
-        background-color: #dbdada;
+        background-color: #e1dfdf;
     }
 }
 
