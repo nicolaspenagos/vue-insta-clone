@@ -4,7 +4,6 @@ import { RouterLink, RouterView } from "vue-router";
 
 
 <template>
-  
   <main class="main">
     <div class="decoline"></div>
     <RouterView />
@@ -81,7 +80,7 @@ $gradient-purple: #6A30F8;
 }
 
 .decoline{
-  height: 7px;
+  height: 6px;
   width: 100%;
   position: absolute;
   top: 0;

@@ -1,5 +1,16 @@
 <template>
   <section>
+    <draggable
+      v-model="myArray"
+      group="people"
+      @start="drag = true"
+      @end="drag = false"
+      item-key="id"
+    >
+      <template #item="{ element }">
+        <div>{{ element.name }}</div>
+      </template>
+    </draggable>
     <div class="container container--up shadow">
       <img :src="instaPath" class="logo" />
       <input placeholder="email" class="input emailInput" />
@@ -16,6 +27,43 @@
     </div>
   </section>
 </template>
+<script>
+import draggable from "vuedraggable";
+
+export default {
+  components: {
+    draggable,
+  },
+  data() {
+    return {
+      drag: false,
+
+      myArray: [
+        { name: "Angular", id: 0 },
+        { name: "React", id: 1 },
+        { name: "Vue", id: 2 },
+        { name: "a", id: 4 },
+        { name: "b", id: 5 },
+        { name: "v", id: 6 },
+      ],
+      oldIndex: "",
+      newIndex: "",
+      instaPath: "./instagram.png",
+      singUp: false,
+    };
+  },
+  methods: {
+    onEnd: function (evt) {
+      console.log(evt);
+      this.oldIndex = evt.oldIndex;
+      this.newIndex = evt.newIndex;
+    },
+  },
+  props: {
+    msg: String,
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 .loginButton {
@@ -54,13 +102,4 @@ p {
 </style>
 
 
-<script>
-export default {
-  data() {
-    return {
-      instaPath: "./instagram.png",
-      singUp: false,
-    };
-  },
-};
-</script>
+
