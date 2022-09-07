@@ -10,6 +10,7 @@
     v-if="imageURLOk"
 
     @error="noImageFound" 
+    @load="imageFound"
   />
   <div
     class="loginImage loginImage--div shadow"
@@ -25,14 +26,27 @@ export default {
   },
   methods: {
     noImageFound() {
+      console.log(":("+ this.path);  
+      //Crear diccionario para guardar en estados las que no esten y luego comprobar
+      
       this.imageURLOk = false;
     },
+  
+  
   },
   data() {
     return {
       imageURLOk: true,
-    };
+    }
   },
+  watch:{
+     imageName(){
+        if(!(this.imageName.includes("7")||this.imageName.includes("4")||this.imageName.includes("8"))){
+          this.imageURLOk =  true;
+        }
+     }
+  }
+  ,
   computed: {
     path() {
       return "./" + this.imageName + ".png";
