@@ -1,16 +1,6 @@
 <template>
   <section>
-    <draggable
-      v-model="myArray"
-      group="people"
-      @start="drag = true"
-      @end="drag = false"
-      item-key="id"
-    >
-      <template #item="{ element }">
-        <div>{{ element.name }}</div>
-      </template>
-    </draggable>
+   
     <div class="container container--up shadow">
       <img :src="instaPath" class="logo" />
       <input placeholder="email" class="input emailInput" />
