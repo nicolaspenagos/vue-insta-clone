@@ -1,6 +1,5 @@
 <template>
   <section>
-   
     <div class="container container--up shadow">
       <img :src="instaPath" class="logo" />
       <input placeholder="email" class="input emailInput" />
@@ -88,6 +87,22 @@ export default {
 p {
   padding-left: 3px;
   padding-right: 3px;
+}
+
+@media (max-width:450px) {
+  .container{
+   
+    margin: 0;
+    margin-bottom: 8px;
+  }
+
+  .input{
+    width: 80%;
+  }
+
+  .button{
+     width: 80%;
+  }
 }
 </style>
 

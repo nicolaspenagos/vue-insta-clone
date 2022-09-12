@@ -1,34 +1,26 @@
 <template>
   <section class="loginContent">
-
+    <div class="photoGrid">
       <draggable
         v-model="images"
-        group="people"
+        group="pics"
+        item-key="imageName"
+        ghost-class="ghost"
+        tag="transition-group"
         @start="drag = true"
         @end="drag = false"
-        item-key="imageName"
-         class="photoGrid"
       >
         <template #item="{ element }">
           <div>
-            
-       
-          <LoginPhoto
-            :imageName="element.name"
-            :id="element.name"
-            :key="imageName"
-          />
+            <LoginPhoto
+              :imageName="element.name"
+              :id="element.name"
+              :key="imageName"
+            />
           </div>
         </template>
       </draggable>
-      <!--
-      <LoginPhoto
-        :imageName="imageName"
-        :id="imageName"
-        v-for="imageName in images"
-        :key="imageName"
-      />-->
-
+    </div>
     <LoginModule></LoginModule>
   </section>
 </template>
@@ -38,24 +30,17 @@ import LoginPhoto from "../components/LoginPhoto.vue";
 import LoginModule from "../components/LoginModule.vue";
 import draggable from "vuedraggable";
 export default {
-  methods: {
-    onEnd: function (evt) {
-      console.log(evt);
-      this.oldIndex = evt.oldIndex;
-      this.newIndex = evt.newIndex;
-    },
-  },
   data() {
     return {
       images: [
         { name: "img1" },
         { name: "img2" },
         { name: "img3" },
-        { name: "img4" },
+        { name: "xxxx" },
         { name: "img5" },
         { name: "img6" },
-        { name: "img7" },
-        { name: "img8" },
+        { name: "xxxx" },
+        { name: "xxxx" },
         { name: "img9" },
       ],
     };
@@ -70,10 +55,27 @@ export default {
   display: grid;
   grid-template-columns: auto auto auto;
   margin-right: 50px;
+  transition: transform 0.5s;
 }
 
+.ghost {
+  opacity: 0.2;
+}
 .loginContent {
   display: flex;
   flex-direction: row;
 }
+
+article {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+@media (max-width:600px) {
+  .photoGrid{
+    display: none;
+  }
+}
+
+
 </style>
