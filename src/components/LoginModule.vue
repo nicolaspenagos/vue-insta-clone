@@ -2,22 +2,28 @@
   <section class="loginModule">
     <div class="container container--up shadow">
       <img :src="instaPath" class="logo" />
-      <input placeholder="email" class="input emailInput" />
+      <input placeholder="email" class="input emailInput" name="Email" v-model="email" />
+
+      <input placeholder="username" class="input usernameInput" v-if="singUp" />
       <input
         placeholder="password"
         class="input passwordInput"
         type="password"
+        name="Password"
+        v-model="password"
       />
-      <button class="button loginButton">Log in</button>
+      <button class="button loginButton" v-on:click="auth">{{ text[0] }}</button>
     </div>
     <div class="container container--down shadow">
-      <p class="text">Don't have an account?</p>
-      <p class="text text--blue">Sign up</p>
+      <p class="text">{{text[1]}}</p>
+      <p class="text text--blue" v-on:click="changeModule">{{text[2]}}</p>
     </div>
   </section>
 </template>
 <script>
 import draggable from "vuedraggable";
+import { mapStores } from "pinia";
+import {useUsersStore} from "../stores/users"
 
 export default {
   components: {
@@ -43,31 +49,46 @@ export default {
   },
   methods: {
     onEnd: function (evt) {
-      console.log(evt);
       this.oldIndex = evt.oldIndex;
       this.newIndex = evt.newIndex;
     },
+    changeModule(){
+      this.singUp=!this.singUp;
+    },
+    auth(){
+   
+   
+      this.usersStore.login(this.email,this.password);
+      console.log(this.usersStore.getCurrentUser);
+    }
   },
   props: {
     msg: String,
+  },
+  computed: {
+     
+    ...mapStores(useUsersStore),
+  
+    text() {
+      return this.singUp ? ["Sign Up", "Already have an account?", "Log In"] : ["Log In", "Don't have an account?","Sign Up" ];
+    }
+  
   },
 };
 </script>
 
 <style lang="scss" scoped>
 
-.loginButton {
+.input{
   margin-top: 15px;
 }
-.emailInput {
-  margin-top: 15px;
-}
-.passwordInput {
+.button{
   margin-top: 15px;
 }
 .logo {
   width: 203.58px;
   height: 73.86px;
+  margin-top: -20px;
 }
 .container {
   justify-content: center;
@@ -90,24 +111,25 @@ p {
   padding-right: 3px;
 }
 
-@media (max-width:600px) {
-  .container{
+@media (max-width: 600px) {
+  .container {
     widows: 100%;
     margin: 0;
     margin-bottom: 8px;
-    &--up{
+    &--up {
       width: 100%;
     }
   }
 
-  .input{
+  .input {
     width: 80%;
+  
   }
 
-  .button{
-     width: 80%;
+  .button {
+    width: 80%;
   }
-  .loginModule{
+  .loginModule {
     width: 100%;
   }
 }
