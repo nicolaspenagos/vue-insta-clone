@@ -1,5 +1,6 @@
 <template>
   <section class="loginContent">
+  
     <div class="photoGrid">
       <draggable
         v-model="images"
@@ -29,6 +30,7 @@
 import LoginPhoto from "../components/LoginPhoto.vue";
 import LoginModule from "../components/LoginModule.vue";
 import draggable from "vuedraggable";
+import HeaderModule from "../components/HeaderModule.vue";
 export default {
   data() {
     return {
@@ -45,7 +47,7 @@ export default {
       ],
     };
   },
-  components: { LoginPhoto, LoginModule, draggable },
+  components: { LoginPhoto, LoginModule, draggable, HeaderModule },
 };
 </script>
 
@@ -64,6 +66,7 @@ export default {
 .loginContent {
   display: flex;
   flex-direction: row;
+  padding: 16px;
 }
 
 article {
@@ -74,6 +77,9 @@ article {
 @media (max-width:600px) {
   .photoGrid{
     display: none;
+  }
+  .loginContent{
+    width: 100%;
   }
 }
 

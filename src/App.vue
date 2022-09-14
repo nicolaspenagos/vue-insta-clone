@@ -24,7 +24,15 @@ $gradient-orange: #FF6E00;
 $gradent-pink: #FF005D;
 $gradient-magenta: #CD00BD;
 $gradient-purple: #6A30F8;
+$ultra-light-gray:#D9D9D9;
 
+*{
+  color: $insta-black;
+}
+
+.subtitle{
+  font-weight: 600;
+}
 .main {
   background-color: $background-color;
   width: 100%;
@@ -91,6 +99,12 @@ $gradient-purple: #6A30F8;
   animation: gradient 4s infinite;
   animation-fill-mode: forwards;
   animation-timing-function: linear;
+  z-index: 10;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
 }
 @keyframes gradient{
   0%   { background-position: 0 0; }

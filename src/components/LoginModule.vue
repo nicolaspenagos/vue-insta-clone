@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="loginModule">
     <div class="container container--up shadow">
       <img :src="instaPath" class="logo" />
       <input placeholder="email" class="input emailInput" />
@@ -55,6 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .loginButton {
   margin-top: 15px;
 }
@@ -89,11 +90,14 @@ p {
   padding-right: 3px;
 }
 
-@media (max-width:450px) {
+@media (max-width:600px) {
   .container{
-   
+    widows: 100%;
     margin: 0;
     margin-bottom: 8px;
+    &--up{
+      width: 100%;
+    }
   }
 
   .input{
@@ -102,6 +106,9 @@ p {
 
   .button{
      width: 80%;
+  }
+  .loginModule{
+    width: 100%;
   }
 }
 </style>

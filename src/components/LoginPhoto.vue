@@ -18,7 +18,9 @@ export default {
     path() {
       return "./" + this.imageName + ".png";
     },
-  },
+  }, watch(){
+    
+  }
 };
 </script>
 
