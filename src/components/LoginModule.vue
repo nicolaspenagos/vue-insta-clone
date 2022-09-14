@@ -2,9 +2,21 @@
   <section class="loginModule">
     <div class="container container--up shadow">
       <img :src="instaPath" class="logo" />
-      <input placeholder="email" class="input emailInput" name="Email" v-model="email" />
+      <input
+        placeholder="email"
+        class="input emailInput"
+        name="Email"
+        v-model="email"
+        ref="loginForm"
+      />
 
-      <input placeholder="username" class="input usernameInput" v-if="singUp" />
+      <input
+        placeholder="username"
+        class="input usernameInput"
+        v-if="singUp"
+        name="Username"
+        v-model="username"
+      />
       <input
         placeholder="password"
         class="input passwordInput"
@@ -12,20 +24,29 @@
         name="Password"
         v-model="password"
       />
-      <button class="button loginButton" v-on:click="auth">{{ text[0] }}</button>
+      <button class="button loginButton" v-on:click="auth">
+        {{ text[0] }}
+      </button>
+      <p class="text text--red msg" v-if="wrongCredentials">
+        {{ credentialsMsg }}
+      </p>
     </div>
     <div class="container container--down shadow">
-      <p class="text">{{text[1]}}</p>
-      <p class="text text--blue" v-on:click="changeModule">{{text[2]}}</p>
+      <p class="text">{{ text[1] }}</p>
+      <p class="text text--blue" v-on:click="changeModule">{{ text[2] }}</p>
     </div>
   </section>
 </template>
 <script>
 import draggable from "vuedraggable";
 import { mapStores } from "pinia";
-import {useUsersStore} from "../stores/users"
+import { useUsersStore } from "../stores/users";
+import router from "@/router";
 
 export default {
+  setup() {
+    //const route = useRoute()
+  },
   components: {
     draggable,
   },
@@ -45,50 +66,85 @@ export default {
       newIndex: "",
       instaPath: "./instagram.png",
       singUp: false,
+      wrongCredentials: false,
+      email: "",
+      name: "",
+      username: "",
+      userAlreadyExits: false,
     };
+  },
+  mounted() {
+    this.usersStore.loadUsers();
+    console.log(this.usersStore.getUsers);
   },
   methods: {
     onEnd: function (evt) {
       this.oldIndex = evt.oldIndex;
       this.newIndex = evt.newIndex;
     },
-    changeModule(){
-      this.singUp=!this.singUp;
+    changeModule() {
+      this.singUp = !this.singUp;
+      this.wrongCredentials = false;
     },
-    auth(){
-   
-   
-      this.usersStore.login(this.email,this.password);
-      console.log(this.usersStore.getCurrentUser);
-    }
+    auth() {
+      if (this.singUp) {
+        this.usersStore.signup(this.email, this.password, this.username);
+        this.validateOperation();
+      } else {
+        this.usersStore.login(this.email, this.password);
+        this.validateOperation();
+      }
+    },
+    validateOperation() {
+  
+      if (
+        this.usersStore.getCurrentUser &&
+        typeof this.usersStore.getCurrentUser.email != "undefined"
+      ) {
+        this.wrongCredentials = false;
+        router.push("/home");
+      } else {
+        this.wrongCredentials = true;
+        if (this.singUp) {
+          this.userAlreadyExits = true;
+        }
+        this.email = "";
+        this.password = "";
+        this.username = "";
+      }
+    },
   },
   props: {
     msg: String,
   },
   computed: {
-     
     ...mapStores(useUsersStore),
-  
+
     text() {
-      return this.singUp ? ["Sign Up", "Already have an account?", "Log In"] : ["Log In", "Don't have an account?","Sign Up" ];
-    }
-  
+      return this.singUp
+        ? ["Sign Up", "Already have an account?", "Log In"]
+        : ["Log In", "Don't have an account?", "Sign Up"];
+    },
+    credentialsMsg() {
+      return this.userAlreadyExits
+        ? "User already exits"
+        : "Wrong username, email or password";
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
-.input{
+.input {
   margin-top: 15px;
 }
-.button{
+.button {
   margin-top: 15px;
 }
 .logo {
   width: 203.58px;
   height: 73.86px;
-  margin-top: -20px;
+  //margin-top: -20px;
 }
 .container {
   justify-content: center;
@@ -111,6 +167,10 @@ p {
   padding-right: 3px;
 }
 
+.msg {
+  margin-top: 15px;
+}
+
 @media (max-width: 600px) {
   .container {
     widows: 100%;
@@ -123,7 +183,6 @@ p {
 
   .input {
     width: 80%;
-  
   }
 
   .button {

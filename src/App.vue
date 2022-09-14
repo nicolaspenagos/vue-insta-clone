@@ -55,6 +55,9 @@ $ultra-light-gray:#D9D9D9;
       cursor: pointer;
     }
   }
+  &--red{
+    color: #FD1D1D;
+  }
 }
 
 .container {
