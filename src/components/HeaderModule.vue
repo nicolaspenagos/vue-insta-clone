@@ -2,6 +2,10 @@
   <header class="header">
     <img :src="instaPath" class="header__logo" />
     <div class="header__menu">
+      <RouterLink to="/" @click="logout" class="text text--blue logout"
+        >Log out</RouterLink
+      >
+
       <img :src="homeImagePath" class="image" />
       <img :src="addImagePath" class="image" @click="openModal" />
       <img
@@ -11,10 +15,11 @@
       />
     </div>
   </header>
-
 </template>
 
 <script>
+import { mapStores } from "pinia";
+import { useUsersStore } from "../stores/users";
 export default {
   data() {
     return {
@@ -27,19 +32,32 @@ export default {
     };
   },
   methods: {
-    openModal(){
-         this.$emit('open');
-    }
+    openModal() {
+      this.$emit("open");
+    },
+    logout() {
+      this.usersStore.logout();
+    },
   },
   computed: {
+    ...mapStores(useUsersStore),
     creatorImage() {
-      return this.imageError ? this.defaultUserImagePath : this.userImagePath;
-    },
+      if (this.usersStore.getCurrentUser.userPicture == "")
+        return this.imageError ? this.defaultUserImagePath : this.userImagePath;
+      else return this.usersStore.getCurrentUser.userPicture;
+    }
+  },
+  mounted() {
+    console.log(this.usersStore.getCurrentUser);
   },
 };
 </script>
 
 <style scoped lang="scss">
+.logout {
+  font-size: small;
+  margin-right: 20px;
+}
 .header {
   background-color: white;
   width: 100%;
@@ -70,14 +88,14 @@ export default {
 .image {
   width: 18px;
   height: 18px;
+
   cursor: pointer;
   margin-right: 7px;
   &--user {
     width: 26px;
     height: 26px;
-    opacity: 0.85;
+    opacity: 1;
+      border-radius: 50%;
   }
 }
-
-
 </style>

@@ -1,6 +1,5 @@
 <template>
   <main class="content">
- 
     <section class="info row">
       <div class="row">
         <img
@@ -9,21 +8,21 @@
           @error="imageError = true"
         />
         <div class="info__details">
-          <h3 class="username">{{username}}</h3>
-          <h4 class="tag">{{email}}</h4>
+          <h3 class="username">{{ username }}</h3>
+          <h4 class="tag">{{ email }}</h4>
         </div>
       </div>
       <div class="info__account row">
         <div class="row info__account__item">
-          <h3 class="subtitle">12</h3>
+          <h3 class="subtitle">{{followers}}</h3>
           <p>followers</p>
         </div>
         <div class="row info__account__item">
-          <h3 class="subtitle">9</h3>
+          <h3 class="subtitle">{{following}}</h3>
           <p>following</p>
         </div>
         <div class="row">
-          <h3 class="subtitle">9</h3>
+          <h3 class="subtitle">{{posts}}</h3>
           <p>posts</p>
         </div>
       </div>
@@ -34,7 +33,7 @@
 
 
 <script>
-  import { mapStores } from "pinia";
+import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
 export default {
   data() {
@@ -42,29 +41,45 @@ export default {
       imageError: false,
       userImagePath: "./id_user.png",
       defaultUserImagePath: "./user.png",
-      currentUsername:"",
-      currentUserEmail:""
+      currentUsername: "",
+      currentUserEmail: "",
+      currentFollowers: 0,
+      currentFollowing: 0,
+      currentPosts: 0
+  
     };
   },
   computed: {
     ...mapStores(useUsersStore),
     creatorImage() {
-      return this.imageError ? this.defaultUserImagePath : this.userImagePath;
+      if (this.usersStore.getCurrentUser.userPicture == "")
+        return this.imageError ? this.defaultUserImagePath : this.userImagePath;
+      else return this.usersStore.getCurrentUser.userPicture;ß
     },
-    username(){
+    username() {
       return this.currentUsername;
     },
-    email(){
+    followers() {
+      return this.currentFollowers;
+    },
+    following() {
+      return this.currentFollowing;
+    },
+    posts() {
+      return this.currentPosts;
+    },
+    email() {
       return this.currentUserEmail;
-    }
-  },  mounted() {
-    
+    },
+  },
+  mounted() {
     let currentUser = this.usersStore.getCurrentUser;
-    this.currentUsername =  currentUser.username;
+    this.currentUsername = currentUser.username;
     this.currentUserEmail = currentUser.email;
-
-  }
-
+    this.currentFollowers = currentUser.followers;
+    this.currentFollowing = currentUser.following;
+    this.currentPosts = currentUser.posts;
+  },
 };
 </script>
 
@@ -75,9 +90,10 @@ export default {
   background-color: #d9d9d9;
 }
 .profilePic {
-  width: 110px;
-  width: 110px;
-  opacity: 0.85;
+  width: 110px !important;
+  height: 110px !important;
+  border-radius: 50%;
+
 }
 
 .content {
@@ -121,8 +137,8 @@ export default {
   padding-left: 80px;
   padding-right: 80px;
 
-  padding-top: 35px;
-  padding-bottom: 35px;
+  padding-top: 25px;
+  padding-bottom: 25px;
   justify-content: space-between;
 }
 </style>

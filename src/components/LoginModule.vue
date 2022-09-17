@@ -17,6 +17,7 @@
         name="Username"
         v-model="username"
       />
+
       <input
         placeholder="password"
         class="input passwordInput"
@@ -24,6 +25,19 @@
         name="Password"
         v-model="password"
       />
+
+      <div v-if="singUp" class="userPic">
+        <label class="userPic--text"> Load profile picture </label>
+        <input
+          name="File"
+          type="file"
+          id="userPic"
+          @change="(e) => setImage(e)"
+          v-if="singUp"
+          class="userPic--text"
+        />
+      </div>
+
       <button class="button loginButton" v-on:click="auth">
         {{ text[0] }}
       </button>
@@ -71,13 +85,21 @@ export default {
       name: "",
       username: "",
       userAlreadyExits: false,
+      file: {},
+      imageString : ""
     };
   },
   mounted() {
     this.usersStore.loadUsers();
-    //console.log(this.usersStore.getUsers);
   },
   methods: {
+    setImage(evt) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        this.imageString=reader.result;
+      });
+      reader.readAsDataURL(evt.target.files[0]);
+    },
     onEnd: function (evt) {
       this.oldIndex = evt.oldIndex;
       this.newIndex = evt.newIndex;
@@ -88,7 +110,7 @@ export default {
     },
     auth() {
       if (this.singUp) {
-        this.usersStore.signup(this.email, this.password, this.username);
+        this.usersStore.signup(this.email, this.password, this.username, this.imageString);
         this.validateOperation();
       } else {
         this.usersStore.login(this.email, this.password);
@@ -96,7 +118,6 @@ export default {
       }
     },
     validateOperation() {
-  
       if (
         this.usersStore.getCurrentUser &&
         typeof this.usersStore.getCurrentUser.email != "undefined"
@@ -135,6 +156,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.userPic {
+  margin-left: -20px;
+  margin-top: 5px;
+  &--text {
+    font-size: 14px;
+  }
+}
+
 .input {
   margin-top: 15px;
 }

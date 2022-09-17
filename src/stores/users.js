@@ -16,6 +16,9 @@ export const useUsersStore = defineStore("users", {
     },
     actions: {
 
+        logout() {
+            this.currentUser = null;
+        },
         loadUsers() {
             this.users = JSON.parse(localStorage.getItem('users'));
         },
@@ -36,14 +39,14 @@ export const useUsersStore = defineStore("users", {
                 this.currentUser = user;
             }
         },
-        signup(email, password, username) {
+        signup(email, password, username, userPicture) {
 
             let newUser = null;
             let user = this.getUserByEmail(username);
 
             if (user == null || typeof(user.email) == "undefined") {
 
-                newUser = { "username": username, "email": email, "password": password };
+                newUser = { "username": username, "email": email, "password": password, "followers": 0, "following": 0, "posts": 0, "userPicture": userPicture };
                 this.users.push(newUser);
                 localStorage.setItem('users', JSON.stringify(this.users));
                 this.currentUser = newUser;
