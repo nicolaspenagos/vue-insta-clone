@@ -3,7 +3,7 @@
     <img :src="instaPath" class="header__logo" />
     <div class="header__menu">
       <img :src="homeImagePath" class="image" />
-      <img :src="addImagePath" class="image" />
+      <img :src="addImagePath" class="image" @click="openModal" />
       <img
         :src="creatorImage"
         class="image image--user"
@@ -26,7 +26,11 @@ export default {
       defaultUserImagePath: "./user.png",
     };
   },
-  methods: {},
+  methods: {
+    openModal(){
+         this.$emit('open');
+    }
+  },
   computed: {
     creatorImage() {
       return this.imageError ? this.defaultUserImagePath : this.userImagePath;

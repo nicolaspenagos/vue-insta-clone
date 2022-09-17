@@ -21,6 +21,11 @@ export const useUsersStore = defineStore("users", {
         },
         getUserByEmail(email) {
 
+            if (this.users == null) {
+                this.users = [];
+                return null;
+            }
+
             const filteredUsers = this.users.filter((user) => email === user.email);
             return filteredUsers ? {...filteredUsers[0] } : null
         },
@@ -36,7 +41,7 @@ export const useUsersStore = defineStore("users", {
             let newUser = null;
             let user = this.getUserByEmail(username);
 
-            if (typeof(user.email) == "undefined") {
+            if (user == null || typeof(user.email) == "undefined") {
 
                 newUser = { "username": username, "email": email, "password": password };
                 this.users.push(newUser);
@@ -49,6 +54,12 @@ export const useUsersStore = defineStore("users", {
 
         },
         getUserByUsername(username) {
+
+            if (this.users == null) {
+                this.users = [];
+                return null;
+            }
+
             const filteredUsers = this.users.filter((user) => username === user.username);
             return filteredUsers ? {...filteredUsers[0] } : null
         }

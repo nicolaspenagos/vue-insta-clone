@@ -75,7 +75,7 @@ export default {
   },
   mounted() {
     this.usersStore.loadUsers();
-    console.log(this.usersStore.getUsers);
+    //console.log(this.usersStore.getUsers);
   },
   methods: {
     onEnd: function (evt) {
