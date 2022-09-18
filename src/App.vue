@@ -43,6 +43,9 @@ $ultra-light-gray:#D9D9D9;
   justify-content: center;
   align-items: center;
 }
+.userPic{
+  border-radius: 50%;
+}
 
 .text {
   font-weight: 400;
@@ -57,6 +60,12 @@ $ultra-light-gray:#D9D9D9;
   }
   &--red{
     color: #FD1D1D;
+  }
+  &--gray{
+    color: rgb(165, 165, 165)
+  }
+  &--black{
+    color: $insta-black;
   }
 }
 
@@ -88,6 +97,14 @@ $ultra-light-gray:#D9D9D9;
   border-radius: 5px;
   color: white;
   font-size: 14px;
+  &--modal{
+    width: 100px;
+    height: 30px;
+    margin-top: 5px;
+  }
+  &--block{
+    opacity: 0.5;
+  }
 }
 
 .decoline{

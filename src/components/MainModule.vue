@@ -14,15 +14,15 @@
       </div>
       <div class="info__account row">
         <div class="row info__account__item">
-          <h3 class="subtitle">{{followers}}</h3>
+          <h3 class="subtitle">{{ followers }}</h3>
           <p>followers</p>
         </div>
         <div class="row info__account__item">
-          <h3 class="subtitle">{{following}}</h3>
+          <h3 class="subtitle">{{ following }}</h3>
           <p>following</p>
         </div>
         <div class="row">
-          <h3 class="subtitle">{{posts}}</h3>
+          <h3 class="subtitle">{{ posts }}</h3>
           <p>posts</p>
         </div>
       </div>
@@ -45,16 +45,21 @@ export default {
       currentUserEmail: "",
       currentFollowers: 0,
       currentFollowing: 0,
-      currentPosts: 0
-  
+      currentPosts: 0,
     };
   },
   computed: {
     ...mapStores(useUsersStore),
     creatorImage() {
-      if (this.usersStore.getCurrentUser.userPicture == "")
-        return this.imageError ? this.defaultUserImagePath : this.userImagePath;
-      else return this.usersStore.getCurrentUser.userPicture;ß
+      if (this.usersStore.getCurrentUser.userPicture != null) {
+        if (this.usersStore.getCurrentUser.userPicture == "")
+          return this.imageError
+            ? this.defaultUserImagePath
+            : this.userImagePath;
+        else return this.usersStore.getCurrentUser.userPicture;
+      }
+
+      return this.defaultUserImagePath;
     },
     username() {
       return this.currentUsername;
@@ -93,7 +98,6 @@ export default {
   width: 110px !important;
   height: 110px !important;
   border-radius: 50%;
-
 }
 
 .content {

@@ -42,10 +42,15 @@ export default {
   computed: {
     ...mapStores(useUsersStore),
     creatorImage() {
-      if (this.usersStore.getCurrentUser.userPicture == "")
-        return this.imageError ? this.defaultUserImagePath : this.userImagePath;
-      else return this.usersStore.getCurrentUser.userPicture;
-    }
+      if (this.usersStore.getCurrentUser.userPicture!=null) {
+        if (this.usersStore.getCurrentUser.userPicture == "")
+          return this.imageError
+            ? this.defaultUserImagePath
+            : this.userImagePath;
+        else return this.usersStore.getCurrentUser.userPicture;
+      }
+      return this.defaultUserImagePath;
+    },
   },
   mounted() {
     console.log(this.usersStore.getCurrentUser);
@@ -95,7 +100,7 @@ export default {
     width: 26px;
     height: 26px;
     opacity: 1;
-      border-radius: 50%;
+    border-radius: 50%;
   }
 }
 </style>

@@ -1,19 +1,14 @@
 <template>
   <main class="home">
     <Modal
-      titleColor="blue"
-      :showButton="true"
-      title="Hola soy un modal 1"
+   
+    
       v-if="showModal1"
       @close="closeModal1"
     >
-      <h2>Un subtitulo</h2>
+ 
    
-      <template v-slot:links>
-        <a class="link1" href="">twitter</a><br /><a class="link2" href=""
-          >facebook</a
-        ><br /><a class="link1" href="">linkedin</a>
-      </template>
+ 
     </Modal>
     <HeaderModule @open="openModal1"></HeaderModule>
     <MainModule></MainModule>
