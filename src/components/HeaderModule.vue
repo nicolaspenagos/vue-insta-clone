@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapStores(useUsersStore),
     creatorImage() {
-      if (this.usersStore.getCurrentUser.userPicture!=null) {
+      if (this.usersStore.getCurrentUser!=null&&this.usersStore.getCurrentUser.userPicture!=null) {
         if (this.usersStore.getCurrentUser.userPicture == "")
           return this.imageError
             ? this.defaultUserImagePath

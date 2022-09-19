@@ -16,6 +16,9 @@ export const useUsersStore = defineStore("users", {
     },
     actions: {
 
+        save() {
+            localStorage.setItem('users', JSON.stringify(this.users));
+        },
         logout() {
             this.currentUser = null;
         },
@@ -46,7 +49,7 @@ export const useUsersStore = defineStore("users", {
 
             if (user == null || typeof(user.email) == "undefined") {
 
-                newUser = { "username": username, "email": email, "password": password, "followers": 0, "following": 0, "posts": 0, "userPicture": userPicture };
+                newUser = { "username": username, "email": email, "password": password, "followers": 0, "following": 0, "posts": 0, "userPicture": userPicture, "posts": [] };
                 this.users.push(newUser);
                 localStorage.setItem('users', JSON.stringify(this.users));
                 this.currentUser = newUser;
@@ -65,7 +68,11 @@ export const useUsersStore = defineStore("users", {
 
             const filteredUsers = this.users.filter((user) => username === user.username);
             return filteredUsers ? {...filteredUsers[0] } : null
+        },
+        test() {
+            console.log('aaa');
         }
+
 
     },
 });

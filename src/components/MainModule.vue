@@ -28,6 +28,14 @@
       </div>
     </section>
     <div class="sepline"></div>
+    <div class="posts__container">
+      <section class="posts">
+   
+      <Post :post="post"  v-for="(post, index) in currentsPostsArray" :key="index">
+
+      </Post>
+    </section>
+    </div>
   </main>
 </template>
 
@@ -35,56 +43,71 @@
 <script>
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
+import Post from "./Post.vue";
 export default {
-  data() {
-    return {
-      imageError: false,
-      userImagePath: "./id_user.png",
-      defaultUserImagePath: "./user.png",
-      currentUsername: "",
-      currentUserEmail: "",
-      currentFollowers: 0,
-      currentFollowing: 0,
-      currentPosts: 0,
-    };
-  },
-  computed: {
-    ...mapStores(useUsersStore),
-    creatorImage() {
-      if (this.usersStore.getCurrentUser.userPicture != null) {
-        if (this.usersStore.getCurrentUser.userPicture == "")
-          return this.imageError
-            ? this.defaultUserImagePath
-            : this.userImagePath;
-        else return this.usersStore.getCurrentUser.userPicture;
-      }
-
-      return this.defaultUserImagePath;
+    props: ["update"],
+    watch: {
+        update() {
+            console.log('dmsk');
+            this.currentPosts = this.usersStore.getCurrentUser.posts.length;
+        },
     },
-    username() {
-      return this.currentUsername;
+    data() {
+        return {
+            imageError: false,
+            userImagePath: "./id_user.png",
+            defaultUserImagePath: "./user.png",
+            currentUsername: "",
+            currentUserEmail: "",
+            currentFollowers: 0,
+            currentFollowing: 0,
+            currentPosts: 0,
+            currentsPostsArray: [1, 2, 3],
+        };
     },
-    followers() {
-      return this.currentFollowers;
+    computed: {
+        ...mapStores(useUsersStore),
+        creatorImage() {
+            if (this.usersStore.getCurrentUser != null &&
+                this.usersStore.getCurrentUser.userPicture != null) {
+                if (this.usersStore.getCurrentUser.userPicture == "")
+                    return this.imageError
+                        ? this.defaultUserImagePath
+                        : this.userImagePath;
+                else
+                    return this.usersStore.getCurrentUser.userPicture;
+            }
+            return this.defaultUserImagePath;
+        },
+        username() {
+            return this.currentUsername;
+        },
+        followers() {
+            return this.currentFollowers;
+        },
+        following() {
+            return this.currentFollowing;
+        },
+        posts() {
+            return this.currentPosts;
+        },
+        email() {
+            return this.currentUserEmail;
+        },
+        allPosts() {
+            return this.usersStore.getCurrentUser.posts;
+        },
     },
-    following() {
-      return this.currentFollowing;
+    mounted() {
+        let currentUser = this.usersStore.getCurrentUser;
+        this.currentUsername = currentUser.username;
+        this.currentUserEmail = currentUser.email;
+        this.currentFollowers = currentUser.followers;
+        this.currentFollowing = currentUser.following;
+        this.currentPosts = currentUser.posts.length;
+        this.currentsPostsArray = currentUser.posts;
     },
-    posts() {
-      return this.currentPosts;
-    },
-    email() {
-      return this.currentUserEmail;
-    },
-  },
-  mounted() {
-    let currentUser = this.usersStore.getCurrentUser;
-    this.currentUsername = currentUser.username;
-    this.currentUserEmail = currentUser.email;
-    this.currentFollowers = currentUser.followers;
-    this.currentFollowing = currentUser.following;
-    this.currentPosts = currentUser.posts;
-  },
+    components: { Post }
 };
 </script>
 
@@ -144,5 +167,13 @@ export default {
   padding-top: 25px;
   padding-bottom: 25px;
   justify-content: space-between;
+}
+.posts{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  margin: 25px;
+ 
+
+
 }
 </style>

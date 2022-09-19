@@ -110,9 +110,11 @@ export default {
     },
     auth() {
       if (this.singUp) {
+
         this.usersStore.signup(this.email, this.password, this.username, this.imageString);
         this.validateOperation();
       } else {
+      
         this.usersStore.login(this.email, this.password);
         this.validateOperation();
       }

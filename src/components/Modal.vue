@@ -1,6 +1,6 @@
 <template>
   <div class="backdrop" @click.self="cerrarModal">
-    <div class="modal ">
+    <div class="modal">
       <aside class="modal-container modal-container--left">
         <div v-if="addImage" class="addImage">
           <div class="imageDetail" v-if="addImageLoaded">
@@ -25,14 +25,30 @@
       </aside>
       <aside class="modal-container modal-container--right">
         <div class="row imageDetail__userrow">
-          <img :src="userPic" class="userPic userPic--detail" />
-          <h3 class="text text--black text--username">{{this.usersStore.getCurrentUser.username}}</h3>
+          <div class="row imageDetail__userrow">
+            <img :src="userPic" class="userPic userPic--detail" />
+            <h3 class="text text--black text--username">
+              {{ this.usersStore.getCurrentUser.username }}
+            </h3>
+          </div>
+          <div class="row">
+            <input type=”number”  placeholder="likes" class="input input--likes" v-model="likes"/>
+            <img :src="heartpath" class="heart">
+          </div>
         </div>
-        <input placeholder = "Place" class="input input--place" v-model="place"/>
-        <input placeholder = "Country" class="input input--country" v-model="country"/>
-        <textarea placeholder = "Description" class="input input--description" v-model="description"></textarea>
+        <input placeholder="Place" class="input input--place" v-model="place" />
+        <input
+          placeholder="Country"
+          class="input input--country"
+          v-model="country"
+        />
+        <textarea
+          placeholder="Description"
+          class="input input--description"
+          v-model="description"
+        ></textarea>
         <div class="row row--button">
-          <input placeholder = "Date" class="input input--date" v-model="date"/>
+          <input placeholder="Date" class="input input--date" v-model="date" />
           <button class="button button--modal" @click="post">Post</button>
         </div>
       </aside>
@@ -61,9 +77,37 @@ export default {
       });
       reader.readAsDataURL(evt.target.files[0]);
       this.addImageLoaded = true;
-    },post(){
-      console.log(this.place+" "+this.country+" "+this.description+" "+this.date+" "+this.imageDetail);
-    }
+    },
+    post() {
+      if (
+        this.place != "" &&
+        this.country != "" &&
+        this.description != "" &&
+        this.date != null &&
+        this.imageDetail != ""
+
+      ) {
+
+        let currentLikes = 0;
+     
+        if(this.likes!=""){
+          currentLikes = this.likes;
+        }
+        this.usersStore.getCurrentUser.posts.push({
+          place: this.place,
+          country: this.country,
+          description: this.description,
+          date: this.date,
+          image: this.imageDetail,
+          likes:currentLikes
+        });
+
+        this.usersStore.save();
+        this.$emit("close");
+      } else {
+        alert("Please fill all the data.");
+      }
+    },
   },
   computed: {
     ...mapStores(useUsersStore),
@@ -74,7 +118,11 @@ export default {
       return this.imageDetail;
     },
     userPic() {
-      return this.usersStore.getCurrentUser.userPicture;
+      if (this.usersStore.getCurrentUser.userPicture == "") {
+        return "./user.png";
+      } else {
+        return this.usersStore.getCurrentUser.userPicture;
+      }
     },
   },
   data() {
@@ -82,42 +130,46 @@ export default {
       addImage: true,
       addImagePath: "./add_image.png",
       addImageLoaded: false,
+      heartpath:"./heart.png",
       imageDetail: "",
-      place:"",
-      country:"",
-      description:"",
-      date:""
+      place: "",
+      country: "",
+      description: "",
+      date: "",
+      likes:""
     };
   },
 };
 </script> 
 <style scoped lang="scss">
-
-  .input{
-    margin-top: 5px;
-    height: 30px;
-    font-size: 13px;
-    padding: 10px;
-    &--place{
-      width: 250px;
-
-    }
-    &--country{
-      width: 150px;
-    }
-    &--description{
-      width: 100%;
-      height: 60px;
-    }
-    &--date{
-      width: 150px;
-    }
+.input {
+  margin-top: 5px;
+  height: 30px;
+  font-size: 13px;
+  padding: 10px;
+  &--place {
+    width: 250px;
   }
-.text--username{
+  &--country {
+    width: 150px;
+  }
+  &--description {
+    width: 100%;
+    height: 60px;
+  }
+  &--date {
+    width: 150px;
+  }
+  &--likes{
+    width: 50px;
+    margin-bottom: 20px;
+  }
+}
+.text--username {
   font-weight: 600;
 }
-.userPic{
-  &--detail{
+.userPic {
+  &--detail {
     width: 60px;
     height: 60px;
     margin-right: 10px;
@@ -126,14 +178,13 @@ export default {
 .imageDetail {
   width: 400px;
   height: 400px;
-    &__userrow{
-   align-items: center;
-    margin-bottom: 10px
-;
+  &__userrow {
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
   }
 }
 .addImage {
-
   &__btn {
     cursor: pointer;
   }
@@ -147,7 +198,6 @@ export default {
     visibility: hidden;
     width: 10px;
   }
-
 }
 .title--purple {
   color: purple;
@@ -156,8 +206,12 @@ export default {
 .title--blue {
   color: darkblue;
 }
-
-
+.heart{
+  width: 15px;
+  height: 15px;
+  margin-top: 13px;
+  margin-left: 3px;
+}
 
 .backdrop {
   display: flex;
@@ -173,8 +227,7 @@ export default {
 }
 
 .modal-container {
-  //width: 50%;
-  //padding: 50px;
+
   background-color: white;
   z-index: 30;
   margin: 5px;
@@ -192,13 +245,13 @@ export default {
   }
 }
 .modal {
-  //width: 800px;
+
   display: flex;
   flex-direction: row;
 }
 
-.row{
-  &--button{
+.row {
+  &--button {
     justify-content: space-between;
   }
 }
