@@ -29,12 +29,28 @@
     </section>
     <div class="sepline"></div>
     <div class="posts__container">
+      <div class="filters row">
+        <div class="row filter">
+          <label>Filter by:</label>
+          <select v-model="filterKey">
+            <option>Country</option>
+            <option>place</option>
+          </select>
+          <input class="input" @change="filter" v-model="filterValue" />
+        </div>
+        <div class="row sort">
+          <label>Sort by:</label>
+        </div>
+      </div>
       <section class="posts">
-   
-      <Post :post="post"  v-for="(post, index) in currentsPostsArray" :key="index" @open="openModal" >
-
-      </Post>
-    </section>
+        <Post
+          :post="post"
+          v-for="(post, index) in arrayToShow"
+          :key="index"
+          @open="openModal"
+        >
+        </Post>
+      </section>
     </div>
   </main>
 </template>
@@ -45,75 +61,102 @@ import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
 import Post from "./Post.vue";
 export default {
-    props: ["update"],
-    methods: {
-      openModal(){
-        this.$emit("open");
-      }
+  props: ["update"],
+  methods: {
+    openModal() {
+      this.$emit("open");
     },
+    filter() {
+      this.reloadToShow();
+      if (this.filterKey == "Country" && this.filterValue != "")
+        this.filterByCountry(this.filterValue);
+      if (this.filterKey == "place" && this.filterValue != "")
+        this.filterByPlace(this.filterValue);
+    },
+    filterByCountry(country) {
+      this.arrayToShow = this.arrayToShow.filter((e) => {
+        return e.country == country;
+      });
+    },
+    filterByPlace(place) {
+      this.arrayToShow = this.arrayToShow.filter((e) => {
+        return e.place== place;
+      });
+    },
+    reloadToShow() {
+      this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
+    },
+  },
 
-    watch: {
-        update() {
-            console.log('dmsk');
-            this.currentPosts = this.usersStore.getCurrentUser.posts.length;
-        },
+  watch: {
+    update() {
+      console.log("dmsk");
+      this.currentPosts = this.usersStore.getCurrentUser.posts.length;
+      this.reloadToShow();
+      this.filterValue = "";
     },
-    data() {
-        return {
-            imageError: false,
-            userImagePath: "./id_user.png",
-            defaultUserImagePath: "./user.png",
-            currentUsername: "",
-            currentUserEmail: "",
-            currentFollowers: 0,
-            currentFollowing: 0,
-            currentPosts: 0,
-            currentsPostsArray: [1, 2, 3],
-        };
+  },
+  data() {
+    return {
+      imageError: false,
+      userImagePath: "./id_user.png",
+      defaultUserImagePath: "./user.png",
+      currentUsername: "",
+      currentUserEmail: "",
+      currentFollowers: 0,
+      currentFollowing: 0,
+      currentPosts: 0,
+      currentsPostsArray: [1, 2, 3],
+      arrayToShow: [],
+      filterKey: "",
+      filterValue: "",
+    };
+  },
+  computed: {
+    ...mapStores(useUsersStore),
+    creatorImage() {
+      if (
+        this.usersStore.getCurrentUser != null &&
+        this.usersStore.getCurrentUser.userPicture != null
+      ) {
+        if (this.usersStore.getCurrentUser.userPicture == "")
+          return this.imageError
+            ? this.defaultUserImagePath
+            : this.userImagePath;
+        else return this.usersStore.getCurrentUser.userPicture;
+      }
+      return this.defaultUserImagePath;
     },
-    computed: {
-        ...mapStores(useUsersStore),
-        creatorImage() {
-            if (this.usersStore.getCurrentUser != null &&
-                this.usersStore.getCurrentUser.userPicture != null) {
-                if (this.usersStore.getCurrentUser.userPicture == "")
-                    return this.imageError
-                        ? this.defaultUserImagePath
-                        : this.userImagePath;
-                else
-                    return this.usersStore.getCurrentUser.userPicture;
-            }
-            return this.defaultUserImagePath;
-        },
-        username() {
-            return this.currentUsername;
-        },
-        followers() {
-            return this.currentFollowers;
-        },
-        following() {
-            return this.currentFollowing;
-        },
-        posts() {
-            return this.currentPosts;
-        },
-        email() {
-            return this.currentUserEmail;
-        },
-        allPosts() {
-            return this.usersStore.getCurrentUser.posts;
-        },
+    username() {
+      return this.currentUsername;
     },
-    mounted() {
-        let currentUser = this.usersStore.getCurrentUser;
-        this.currentUsername = currentUser.username;
-        this.currentUserEmail = currentUser.email;
-        this.currentFollowers = currentUser.followers;
-        this.currentFollowing = currentUser.following;
-        this.currentPosts = currentUser.posts.length;
-        this.currentsPostsArray = currentUser.posts;
+    followers() {
+      return this.currentFollowers;
     },
-    components: { Post }
+    following() {
+      return this.currentFollowing;
+    },
+    posts() {
+      return this.currentPosts;
+    },
+    email() {
+      return this.currentUserEmail;
+    },
+    allPosts() {
+      return this.usersStore.getCurrentUser.posts;
+    },
+  },
+  mounted() {
+    let currentUser = this.usersStore.getCurrentUser;
+    this.currentUsername = currentUser.username;
+    this.currentUserEmail = currentUser.email;
+    this.currentFollowers = currentUser.followers;
+    this.currentFollowing = currentUser.following;
+    this.currentPosts = currentUser.posts.length;
+    this.currentsPostsArray = currentUser.posts;
+    this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
+  },
+  components: { Post },
 };
 </script>
 
@@ -174,12 +217,15 @@ export default {
   padding-bottom: 25px;
   justify-content: space-between;
 }
-.posts{
+.posts {
   display: grid;
   grid-template-columns: auto auto auto auto;
   margin: 25px;
- 
+  margin-top: -50px;
+}
 
-
+.filters {
+  justify-content: space-between;
+  padding: 30px;
 }
 </style>
