@@ -8,11 +8,13 @@ export const useUsersStore = defineStore("users", {
 
         ],
         localStorageUsers: [],
-        currentUser: null
+        currentUser: null,
+        selectedPost: null
     }),
     getters: {
         getUsers: (state) => [...state.users],
-        getCurrentUser: (state) => state.currentUser
+        getCurrentUser: (state) => state.currentUser,
+        getSelectedPost: (state) => state.selectedPost
     },
     actions: {
 
@@ -69,9 +71,13 @@ export const useUsersStore = defineStore("users", {
             const filteredUsers = this.users.filter((user) => username === user.username);
             return filteredUsers ? {...filteredUsers[0] } : null
         },
-        test() {
+        setPost(post) {
+            this.selectedPost = post;
             console.log('aaa');
+            console.log(post);
+            console.log('bbb')
         }
+
 
 
     },

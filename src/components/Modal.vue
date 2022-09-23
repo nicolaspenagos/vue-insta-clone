@@ -1,6 +1,45 @@
 <template>
   <div class="backdrop" @click.self="cerrarModal">
-    <div class="modal">
+    <div class="modal" v-if="selectedPost">
+      <aside class="modal-container modal-container--left">
+          <img :src="this.seletecImage" class="imageDetail" />
+          
+      </aside>
+      <aside class="modal-container modal-container--right">
+        <div class="row imageDetail__userrow">
+          <div class="row imageDetail__userrow">
+            <img :src="userPic" class="userPic userPic--detail" />
+            <h3 class="text text--black text--username">
+              {{ this.usersStore.getCurrentUser.username }}
+            </h3>
+          </div>
+             <button class="text x text--blue" @click="cerrarModal">Close</button>
+       
+        </div>
+        <div  class=" input--place s-title">{{this.selectedPlace}}</div>
+        <div
+       
+          class="s-subtitle input--country"
+
+        >{{this.selectedCountry}}</div>
+        <div
+
+          class="input--description s-des"
+
+        >
+        {{this.des}}
+      </div>
+        <div class="row row--button">
+          <div class=" s-subtitle  input--date" >{{this.date}}</div>
+          <div class="row">
+            <div class="div--likes s-likes">{{this.selectedLikes}} </div>
+            <img :src="heartpath" class="heart heart--likes ">
+          </div>
+        </div>
+      </aside>
+
+    </div>
+    <div class="modal" v-else>
       <aside class="modal-container modal-container--left">
         <div v-if="addImage" class="addImage">
           <div class="imageDetail" v-if="addImageLoaded">
@@ -136,12 +175,39 @@ export default {
       country: "",
       description: "",
       date: "",
-      likes:""
+      likes:"",
+      selectedPost:false,
+      seletecImage : "",
+      selectedLikes:"",
+      selectedPlace:"",
+      selectedCountry:"",
+      des:"",
+      date:""
     };
   },
+  mounted(){
+
+    this.selectedPost = this.usersStore.getSelectedPost!=null;
+    if(this.selectedPost){
+      this.seletecImage = this.usersStore.getSelectedPost.image;
+      this.selectedLikes = this.usersStore.getSelectedPost.likes;
+      this.selectedCountry = this.usersStore.getSelectedPost.country;
+      this.selectedPlace = this.usersStore.getSelectedPost.place;
+      this.des = this.usersStore.getSelectedPost.description;
+      this.date = this.usersStore.getSelectedPost.date;
+
+      
+    }
+
+  }
 };
 </script> 
 <style scoped lang="scss">
+
+  .s-des{
+    margin-top: 20px;
+    min-height: 80px;
+  }
 .input {
   margin-top: 5px;
   height: 30px;
@@ -184,6 +250,10 @@ export default {
     justify-content: space-between;
   }
 }
+
+.s-title{
+  font-weight: bold;
+}
 .addImage {
   &__btn {
     cursor: pointer;
@@ -211,6 +281,10 @@ export default {
   height: 15px;
   margin-top: 13px;
   margin-left: 3px;
+  &--likes{
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
 }
 
 .backdrop {
@@ -226,6 +300,9 @@ export default {
   z-index: 20;
 }
 
+.s-likes{
+   margin-top: -4px;
+}
 .modal-container {
 
   background-color: white;
@@ -250,9 +327,23 @@ export default {
   flex-direction: row;
 }
 
+.s-subtitle{
+  color: gray;
+  font-size: 12px;
+}
+
 .row {
   &--button {
     justify-content: space-between;
   }
+}
+.div--likes{
+  height: 20px;
+  margin-bottom: 15px;
+}
+
+.x{
+  margin-bottom: 10px;
+  font-size: 12px;
 }
 </style>

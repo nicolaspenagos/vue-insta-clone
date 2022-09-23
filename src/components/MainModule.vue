@@ -31,7 +31,7 @@
     <div class="posts__container">
       <section class="posts">
    
-      <Post :post="post"  v-for="(post, index) in currentsPostsArray" :key="index">
+      <Post :post="post"  v-for="(post, index) in currentsPostsArray" :key="index" @open="openModal" >
 
       </Post>
     </section>
@@ -46,6 +46,12 @@ import { useUsersStore } from "../stores/users";
 import Post from "./Post.vue";
 export default {
     props: ["update"],
+    methods: {
+      openModal(){
+        this.$emit("open");
+      }
+    },
+
     watch: {
         update() {
             console.log('dmsk');

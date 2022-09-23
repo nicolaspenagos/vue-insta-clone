@@ -11,7 +11,7 @@
  
     </Modal>
     <HeaderModule @open="openModal1"></HeaderModule>
-    <MainModule :update="update"></MainModule>
+    <MainModule :update="update" @open="openModal1"></MainModule>
   </main>
 </template>
 
@@ -32,6 +32,7 @@ export default {
       this.showModal1 = true;
     },
     closeModal1() {
+      this.usersStore.setPost(null);
       this.showModal1 = false;
       this.update = this.usersStore.getCurrentUser.posts.length;
     },

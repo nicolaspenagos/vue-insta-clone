@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     openModal() {
+      this.usersStore.setPost(null);
       this.$emit("open");
     },
     logout() {

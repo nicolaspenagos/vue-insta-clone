@@ -105,6 +105,10 @@ $ultra-light-gray:#D9D9D9;
   &--block{
     opacity: 0.5;
   }
+  &--close{
+    width:  0px;
+    height: 20px;
+  }
 }
 
 .decoline{

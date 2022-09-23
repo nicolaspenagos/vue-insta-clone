@@ -1,6 +1,6 @@
 <template>
   <div class="grid-item">
-    <div class="post shadow">
+    <div class="post shadow" @click="selectPost">
       <img :src="image" class="post__img" />
       <div class="row post__down">
         <div class="post-l">
@@ -20,19 +20,28 @@
 </template>
 
 <script>
+import { mapStores } from "pinia";
+import { useUsersStore } from "../stores/users";
 export default {
   props: {
     post: {},
   },
-  methods: {},
+  methods: {
+    selectPost() {
+    
+      this.usersStore.setPost(this.post);
+      this.$emit("open");
+    },
+  },
   data() {
     return {
       image: "",
-       heartpath:"./heart.png"
+      heartpath: "./heart.png",
     };
   },
 
   computed: {
+    ...mapStores(useUsersStore),
     image() {
       return this.post.image;
     },
@@ -47,11 +56,11 @@ export default {
 
   margin-right: 3px;
   margin-left: auto;
-
 }
 .post {
   width: 200px;
   margin-top: 50px;
+  transition: 0.5s ease;
 
   &__img {
     width: 200px;
@@ -61,6 +70,11 @@ export default {
     background-color: white;
     padding: 10px;
     justify-content: space-between;
+  }
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 40px 19px -30px rgba(50, 50, 50, 0.2);
   }
 }
 .grid-item {
