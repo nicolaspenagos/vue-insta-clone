@@ -138,7 +138,7 @@ export default {
           description: this.description,
           date: this.date,
           image: this.imageDetail,
-          likes:currentLikes
+          likes:parseInt(currentLikes)
         });
 
         this.usersStore.save();

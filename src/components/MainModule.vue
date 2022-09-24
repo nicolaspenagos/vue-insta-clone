@@ -32,14 +32,24 @@
       <div class="filters row">
         <div class="row filter">
           <label>Filter by:</label>
-          <select v-model="filterKey">
+          <select class="input filter--input" v-model="filterKey">
+            <option value="" selected disabled hidden>Choose here</option>
             <option>Country</option>
             <option>place</option>
           </select>
-          <input class="input" @change="filter" v-model="filterValue" />
+          <input
+            class="input filter--input"
+            @change="filter"
+            v-model="filterValue"
+          />
         </div>
         <div class="row sort">
           <label>Sort by:</label>
+          <select class="input filter--input" v-model="sortKey" @change="sort">
+            <option value="" selected disabled hidden>Choose here</option>
+            <option>Likes</option>
+            <option>Date</option>
+          </select>
         </div>
       </div>
       <section class="posts">
@@ -70,8 +80,17 @@ export default {
       this.reloadToShow();
       if (this.filterKey == "Country" && this.filterValue != "")
         this.filterByCountry(this.filterValue);
-      if (this.filterKey == "place" && this.filterValue != "")
+      if (this.filterKey == "Place" && this.filterValue != "")
         this.filterByPlace(this.filterValue);
+    },
+    sort() {
+      this.reloadToShow();
+      if (this.sortKey == "Likes")
+        this.sortByLikes();
+
+    },
+    sortByLikes(){
+      this.arrayToShow.sort((a,b) => (a.likes> b.likes) ? -1 : ((b.likes > a.likes) ? 1 : 0));
     },
     filterByCountry(country) {
       this.arrayToShow = this.arrayToShow.filter((e) => {
@@ -80,7 +99,7 @@ export default {
     },
     filterByPlace(place) {
       this.arrayToShow = this.arrayToShow.filter((e) => {
-        return e.place== place;
+        return e.place == place;
       });
     },
     reloadToShow() {
@@ -110,6 +129,7 @@ export default {
       arrayToShow: [],
       filterKey: "",
       filterValue: "",
+      sortKey: "",
     };
   },
   computed: {
@@ -227,5 +247,17 @@ export default {
 .filters {
   justify-content: space-between;
   padding: 30px;
+}
+
+.filter {
+  align-items: center;
+  &--input {
+    margin-left: 10px;
+    width: 180px;
+  }
+}
+
+.sort {
+  align-items: center;
 }
 </style>
