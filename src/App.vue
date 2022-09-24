@@ -4,9 +4,17 @@ import { RouterLink, RouterView } from "vue-router";
 
 
 <template>
-  <main class="main">
+
+  
+
+
+  <main class="main ">
+
+ 
+
     <div class="decoline"></div>
     <RouterView />
+ 
   </main>
 </template>
 
@@ -36,8 +44,8 @@ $ultra-light-gray:#D9D9D9;
 .main {
   background-color: $background-color;
   width: 100%;
-  height: 100%;
-  position: fixed;
+  //height: 100vh;
+  //position: fixed;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -124,6 +132,7 @@ $ultra-light-gray:#D9D9D9;
   animation-fill-mode: forwards;
   animation-timing-function: linear;
   z-index: 10;
+  position:fixed;
 }
 
 .row{

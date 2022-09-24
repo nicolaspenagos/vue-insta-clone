@@ -1,5 +1,8 @@
 <template>
+  
   <header class="header">
+
+       
     <img :src="instaPath" class="header__logo" />
     <div class="header__menu">
       <RouterLink to="/" @click="logout" class="text text--blue logout"
@@ -77,6 +80,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   z-index: 10;
+  position: fixed;
   &__logo {
     width: 115.76px;
     height: 42px;

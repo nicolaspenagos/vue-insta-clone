@@ -35,7 +35,7 @@
           <select class="input filter--input" v-model="filterKey">
             <option value="" selected disabled hidden>Choose here</option>
             <option>Country</option>
-            <option>place</option>
+            <option>Place</option>
           </select>
           <input
             class="input filter--input"
@@ -84,13 +84,46 @@ export default {
         this.filterByPlace(this.filterValue);
     },
     sort() {
-      this.reloadToShow();
-      if (this.sortKey == "Likes")
-        this.sortByLikes();
+      if (this.sortKey == "Likes") this.sortByLikes();
 
+      if (this.sortKey == "Date") this.sortByDate();
     },
-    sortByLikes(){
-      this.arrayToShow.sort((a,b) => (a.likes> b.likes) ? -1 : ((b.likes > a.likes) ? 1 : 0));
+    sortByLikes() {
+      this.arrayToShow.sort((a, b) =>
+        a.likes > b.likes ? -1 : b.likes > a.likes ? 1 : 0
+      );
+    },
+    sortByDate() {
+      console.log('aaa');
+      this.arrayToShow.sort(function (a, b) {
+        let dateA = a.date.split(".");
+        let dayA = parseInt(dateA[0]);
+        let monthA = parseInt(dateA[1]);
+        let yearA = parseInt(dateA[2]);
+
+        let dateB = b.date.split(".");
+        let dayB = parseInt(dateB[0]);
+        let monthB = parseInt(dateB[1]);
+        let yearB = parseInt(dateB[2]);
+
+        if (yearA > yearB) {
+          return -1;
+        } else if (yearA == yearB) {
+          if (monthA > monthB) {
+            return -1;
+          } else if (monthA == monthB) {
+            if (dayA > dayB) {
+              return -1;
+            } else {
+              if (dayA == dateB) {
+                return 0;
+              }
+            }
+          }
+        } else {
+          return 1;
+        }
+      });
     },
     filterByCountry(country) {
       this.arrayToShow = this.arrayToShow.filter((e) => {
@@ -103,6 +136,7 @@ export default {
       });
     },
     reloadToShow() {
+      this.sortKey = "";
       this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
     },
   },
@@ -195,8 +229,8 @@ export default {
 .content {
   margin-top: 66px;
   width: 100%;
-  height: 100%;
-  position: fixed;
+  //height: 100vh;
+  //position: fixed;
   padding-left: 100px;
   padding-right: 100px;
 }
@@ -242,6 +276,7 @@ export default {
   grid-template-columns: auto auto auto auto;
   margin: 25px;
   margin-top: -50px;
+
 }
 
 .filters {
@@ -259,5 +294,9 @@ export default {
 
 .sort {
   align-items: center;
+}
+
+.main{
+ 
 }
 </style>

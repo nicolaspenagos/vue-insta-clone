@@ -291,9 +291,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: fixed;
+  position: fixed;  
   width: 100vw;
   height: 100vh;
+
   top: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
@@ -346,4 +347,5 @@ export default {
   margin-bottom: 10px;
   font-size: 12px;
 }
+
 </style>

@@ -29,9 +29,11 @@ export default {
 
   methods: {
     openModal1() {
+      document.body.style="overflow:hidden";
       this.showModal1 = true;
     },
     closeModal1() {
+      document.body.style="overflow:auto";
       this.usersStore.setPost(null);
       this.showModal1 = false;
       this.update = this.usersStore.getCurrentUser.posts.length;
@@ -50,6 +52,7 @@ export default {
 <style lang="scss" scoped>
 .home {
   width: 100%;
+  min-height: 100vh;
   height: 100%;
 }
 </style>

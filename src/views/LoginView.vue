@@ -1,29 +1,30 @@
 <template>
-  <section class="loginContent">
-  
-    <div class="photoGrid">
-      <draggable
-        v-model="images"
-        group="pics"
-        item-key="imageName"
-        ghost-class="ghost"
-        tag="transition-group"
-        @start="drag = true"
-        @end="drag = false"
-      >
-        <template #item="{ element }">
-          <div>
-            <LoginPhoto
-              :imageName="element.name"
-              :id="element.name"
-              :key="imageName"
-            />
-          </div>
-        </template>
-      </draggable>
-    </div>
-    <LoginModule></LoginModule>
-  </section>
+  <div class="mainC">
+    <section class="loginContent">
+      <div class="photoGrid">
+        <draggable
+          v-model="images"
+          group="pics"
+          item-key="imageName"
+          ghost-class="ghost"
+          tag="transition-group"
+          @start="drag = true"
+          @end="drag = false"
+        >
+          <template #item="{ element }">
+            <div>
+              <LoginPhoto
+                :imageName="element.name"
+                :id="element.name"
+                :key="imageName"
+              />
+            </div>
+          </template>
+        </draggable>
+      </div>
+      <LoginModule></LoginModule>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -33,7 +34,6 @@ import draggable from "vuedraggable";
 import HeaderModule from "../components/HeaderModule.vue";
 
 export default {
- 
   data() {
     return {
       images: [
@@ -55,6 +55,13 @@ export default {
 
 
 <style lang="scss">
+.mainC {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+}
 .photoGrid {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -76,14 +83,12 @@ article {
   grid-template-columns: auto auto auto;
 }
 
-@media (max-width:600px) {
-  .photoGrid{
+@media (max-width: 600px) {
+  .photoGrid {
     display: none;
   }
-  .loginContent{
+  .loginContent {
     width: 100%;
   }
 }
-
-
 </style>
