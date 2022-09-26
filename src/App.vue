@@ -8,7 +8,7 @@ import { RouterLink, RouterView } from "vue-router";
   
 
 
-  <main class="main ">
+  <main class="main main--res">
 
  
 
