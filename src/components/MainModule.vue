@@ -1,7 +1,7 @@
 <template>
   <main class="content">
     <section class="info row">
-      <div class="row">
+      <div class="row r1">
         <img
           :src="creatorImage"
           class="profilePic"
@@ -31,11 +31,11 @@
     <div class="posts__container">
       <div class="filters row">
         <div class="row filter">
-          <label>Filter by:</label>
+          <label class="label">Filter by:</label>
           <select class="input filter--input" v-model="filterKey">
             <option value="" selected disabled hidden>Choose here</option>
-            <option>Country</option>
-            <option>Place</option>
+            <option>Tag</option>
+            <option>Color</option>
           </select>
           <input
             class="input filter--input"
@@ -44,7 +44,7 @@
           />
         </div>
         <div class="row sort">
-          <label>Sort by:</label>
+          <label class="label">Sort by:</label>
           <select class="input filter--input" v-model="sortKey" @change="sort">
             <option value="" selected disabled hidden>Choose here</option>
             <option>Likes</option>
@@ -78,9 +78,9 @@ export default {
     },
     filter() {
       this.reloadToShow();
-      if (this.filterKey == "Country" && this.filterValue != "")
+      if (this.filterKey == "Tag" && this.filterValue != "")
         this.filterByCountry(this.filterValue);
-      if (this.filterKey == "Place" && this.filterValue != "")
+      if (this.filterKey == "Color" && this.filterValue != "")
         this.filterByPlace(this.filterValue);
     },
     sort() {
@@ -94,7 +94,7 @@ export default {
       );
     },
     sortByDate() {
-      console.log('aaa');
+      console.log("aaa");
       this.arrayToShow.sort(function (a, b) {
         let dateA = a.date.split(".");
         let dayA = parseInt(dateA[0]);
@@ -276,7 +276,9 @@ export default {
   grid-template-columns: auto auto auto auto;
   margin: 25px;
   margin-top: -50px;
-
+  &__container{
+    padding-bottom: 75px;
+  }
 }
 
 .filters {
@@ -296,7 +298,65 @@ export default {
   align-items: center;
 }
 
-.main{
- 
+@media (max-width: 600px) {
+
+  .content {
+    padding: 0;
+  }
+  .info {
+    padding: 20px;
+    flex-direction: column;
+    &__account {
+      margin: 15px;
+      font-size: 16px;
+    }
+  }
+  .profilePic {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .username {
+    font-size: 16px;
+  }
+  .tag {
+    font-size: 14px;
+  }
+
+  .row {
+    //flex-direction: column;
+  }
+
+  .r1 {
+    align-items: center;
+  }
+
+  .filters {
+    flex-direction: column;
+    font-size: 12px;
+  }
+  .input {
+    font-size: 12px;
+  }
+
+  .filter {
+    margin-bottom: 10px;
+    &--input {
+      width: 125px;
+    }
+  }
+
+  .posts {
+    grid-template-columns: auto;
+    
+  }
+
+  .sepline {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .label {
+    width: 50px;
+  }
 }
 </style>

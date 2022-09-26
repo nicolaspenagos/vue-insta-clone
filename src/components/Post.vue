@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     selectPost() {
-    
       this.usersStore.setPost(this.post);
       this.$emit("open");
     },
@@ -95,5 +94,16 @@ export default {
 
 .country {
   margin-top: -6px;
+}
+@media (max-width: 600px) {
+  .post {
+    width: 300px;
+
+
+    &__img {
+      width: 300px;
+      height: auto;
+    }
+  }
 }
 </style>

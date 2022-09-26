@@ -108,4 +108,16 @@ export default {
     border-radius: 50%;
   }
 }
+
+@media (max-width: 600px) {
+.header{
+  width: 100vw;
+  &__logo{
+    margin-left: 30px;
+  }
+  &__menu{
+    margin-right: 30px;
+  }
+}
+}
 </style>

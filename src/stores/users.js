@@ -26,6 +26,7 @@ export const useUsersStore = defineStore("users", {
         },
         loadUsers() {
             this.users = JSON.parse(localStorage.getItem('users'));
+
         },
         getUserByEmail(email) {
 

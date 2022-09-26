@@ -2,8 +2,7 @@
   <div class="backdrop" @click.self="cerrarModal">
     <div class="modal" v-if="selectedPost">
       <aside class="modal-container modal-container--left">
-          <img :src="this.seletecImage" class="imageDetail" />
-          
+        <img :src="this.seletecImage" class="imageDetail" />
       </aside>
       <aside class="modal-container modal-container--right">
         <div class="row imageDetail__userrow">
@@ -13,31 +12,21 @@
               {{ this.usersStore.getCurrentUser.username }}
             </h3>
           </div>
-             <button class="text x text--blue" @click="cerrarModal">Close</button>
-       
+          <button class="text x text--blue" @click="cerrarModal">Close</button>
         </div>
-        <div  class=" input--place s-title">{{this.selectedPlace}}</div>
-        <div
-       
-          class="s-subtitle input--country"
-
-        >{{this.selectedCountry}}</div>
-        <div
-
-          class="input--description s-des"
-
-        >
-        {{this.des}}
-      </div>
+        <div class="input--place s-title">{{ this.selectedPlace }}</div>
+        <div class="s-subtitle input--country">{{ this.selectedCountry }}</div>
+        <div class="input--description s-des">
+          {{ this.des }}
+        </div>
         <div class="row row--button">
-          <div class=" s-subtitle  input--date" >{{this.date}}</div>
+          <div class="s-subtitle input--date">{{ this.date }}</div>
           <div class="row">
-            <div class="div--likes s-likes">{{this.selectedLikes}} </div>
-            <img :src="heartpath" class="heart heart--likes ">
+            <div class="div--likes s-likes">{{ this.selectedLikes }}</div>
+            <img :src="heartpath" class="heart heart--likes" />
           </div>
         </div>
       </aside>
-
     </div>
     <div class="modal" v-else>
       <aside class="modal-container modal-container--left">
@@ -71,13 +60,18 @@
             </h3>
           </div>
           <div class="row">
-            <input type=”number”  placeholder="likes" class="input input--likes" v-model="likes"/>
-            <img :src="heartpath" class="heart">
+            <input
+              type="”number”"
+              placeholder="likes"
+              class="input input--likes"
+              v-model="likes"
+            />
+            <img :src="heartpath" class="heart" />
           </div>
         </div>
-        <input placeholder="Place" class="input input--place" v-model="place" />
+        <input placeholder="Color" class="input input--place" v-model="place" />
         <input
-          placeholder="Country"
+          placeholder="Tag"
           class="input input--country"
           v-model="country"
         />
@@ -124,12 +118,10 @@ export default {
         this.description != "" &&
         this.date != null &&
         this.imageDetail != ""
-
       ) {
-
         let currentLikes = 0;
-     
-        if(this.likes!=""){
+
+        if (this.likes != "") {
           currentLikes = this.likes;
         }
         this.usersStore.getCurrentUser.posts.push({
@@ -138,7 +130,7 @@ export default {
           description: this.description,
           date: this.date,
           image: this.imageDetail,
-          likes:parseInt(currentLikes)
+          likes: parseInt(currentLikes),
         });
 
         this.usersStore.save();
@@ -169,45 +161,40 @@ export default {
       addImage: true,
       addImagePath: "./add_image.png",
       addImageLoaded: false,
-      heartpath:"./heart.png",
+      heartpath: "./heart.png",
       imageDetail: "",
       place: "",
       country: "",
       description: "",
       date: "",
-      likes:"",
-      selectedPost:false,
-      seletecImage : "",
-      selectedLikes:"",
-      selectedPlace:"",
-      selectedCountry:"",
-      des:"",
-      date:""
+      likes: "",
+      selectedPost: false,
+      seletecImage: "",
+      selectedLikes: "",
+      selectedPlace: "",
+      selectedCountry: "",
+      des: "",
+      date: "",
     };
   },
-  mounted(){
-
-    this.selectedPost = this.usersStore.getSelectedPost!=null;
-    if(this.selectedPost){
+  mounted() {
+    this.selectedPost = this.usersStore.getSelectedPost != null;
+    if (this.selectedPost) {
       this.seletecImage = this.usersStore.getSelectedPost.image;
       this.selectedLikes = this.usersStore.getSelectedPost.likes;
       this.selectedCountry = this.usersStore.getSelectedPost.country;
       this.selectedPlace = this.usersStore.getSelectedPost.place;
       this.des = this.usersStore.getSelectedPost.description;
       this.date = this.usersStore.getSelectedPost.date;
-
-      
     }
-
-  }
+  },
 };
 </script> 
 <style scoped lang="scss">
-
-  .s-des{
-    margin-top: 20px;
-    min-height: 80px;
-  }
+.s-des {
+  margin-top: 20px;
+  min-height: 80px;
+}
 .input {
   margin-top: 5px;
   height: 30px;
@@ -226,7 +213,7 @@ export default {
   &--date {
     width: 150px;
   }
-  &--likes{
+  &--likes {
     width: 50px;
     margin-bottom: 20px;
   }
@@ -251,7 +238,7 @@ export default {
   }
 }
 
-.s-title{
+.s-title {
   font-weight: bold;
 }
 .addImage {
@@ -276,12 +263,12 @@ export default {
 .title--blue {
   color: darkblue;
 }
-.heart{
+.heart {
   width: 15px;
   height: 15px;
   margin-top: 13px;
   margin-left: 3px;
-  &--likes{
+  &--likes {
     margin-top: 0;
     margin-bottom: 12px;
   }
@@ -291,7 +278,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: fixed;  
+  position: fixed;
   width: 100vw;
   height: 100vh;
 
@@ -301,11 +288,10 @@ export default {
   z-index: 20;
 }
 
-.s-likes{
-   margin-top: -4px;
+.s-likes {
+  margin-top: -4px;
 }
 .modal-container {
-
   background-color: white;
   z-index: 30;
   margin: 5px;
@@ -323,12 +309,11 @@ export default {
   }
 }
 .modal {
-
   display: flex;
   flex-direction: row;
 }
 
-.s-subtitle{
+.s-subtitle {
   color: gray;
   font-size: 12px;
 }
@@ -338,14 +323,43 @@ export default {
     justify-content: space-between;
   }
 }
-.div--likes{
+.div--likes {
   height: 20px;
   margin-bottom: 15px;
 }
 
-.x{
+.x {
   margin-bottom: 10px;
   font-size: 12px;
 }
+@media (max-width: 600px) {
+  .modal {
+    flex-direction: column;
+    &-container {
+      &--left {
+        width: 350px;
+        height: 350px;
+        margin-bottom: 20px;
+      }
+       &--right {
+        width: 350px;
+        height: 300px;
+      }
+    }
 
+    .imageDetail{
+       width: 350px;
+        height: 350px;
+
+    }
+
+    .backdrop{
+      overflow: hidden;
+    }
+
+    .main{
+      overflow: hidden;
+    }
+  }
+}
 </style>
