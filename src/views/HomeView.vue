@@ -32,6 +32,7 @@ export default {
       document.body.style="overflow:hidden";
       document.querySelector('.main--res').style ="overflow:hidden";
       this.showModal1 = true;
+      
     },
     closeModal1() {
       document.body.style="overflow:auto";
