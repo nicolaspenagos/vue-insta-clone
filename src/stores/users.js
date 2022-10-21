@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { toHandlers } from "vue";
+import { getDatabase, set, ref } from "firebase/database";
 ///// OPTIONS STORE
 export const useUsersStore = defineStore("users", {
     state: () => ({
@@ -19,7 +19,12 @@ export const useUsersStore = defineStore("users", {
     actions: {
 
         save() {
-            localStorage.setItem('users', JSON.stringify(this.users));
+            const db = getDatabase();
+            console.log(this.currentUser);
+            set(ref(db, 'users/' + this.currentUser.uid), {
+                ...this.currentUser
+            });
+
         },
         logout() {
             this.currentUser = null;
@@ -77,6 +82,14 @@ export const useUsersStore = defineStore("users", {
             console.log('aaa');
             console.log(post);
             console.log('bbb')
+        },
+        setUser(user) {
+
+            this.currentUser = user;
+
+        },
+        setUsers(u) {
+            this.users = u;
         }
 
 

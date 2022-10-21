@@ -93,6 +93,8 @@
 import { computed } from "@vue/reactivity";
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
+import { getStorage, ref as ref_st, uploadBytes, getDownloadURL } from "firebase/storage";
+
 export default {
   props: {
     title: String,
@@ -100,6 +102,11 @@ export default {
     titleColor: String,
   },
   methods: {
+    uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  )
+},
     cerrarModal() {
       this.$emit("close");
     },
@@ -110,6 +117,7 @@ export default {
       });
       reader.readAsDataURL(evt.target.files[0]);
       this.addImageLoaded = true;
+      this.file = evt.target.files[0];
     },
     post() {
       if (
@@ -121,20 +129,33 @@ export default {
       ) {
         let currentLikes = 0;
 
-        if (this.likes != "") {
-          currentLikes = this.likes;
+        if (this.usersStore.getCurrentUser.posts == null) {
+          this.usersStore.getCurrentUser.posts = [];
         }
-        this.usersStore.getCurrentUser.posts.push({
+
+        const storage = getStorage();
+        let rand = this.uuidv4();
+        const fileRef = ref_st(storage, "images/" +  this.usersStore.getCurrentUser.uid+"/"+rand );
+
+        uploadBytes(fileRef, this.file).then((snapshot) => {
+          getDownloadURL(
+            ref_st(storage, "images/" + this.usersStore.getCurrentUser.uid+"/"+rand )
+          ).then((url) => {
+            this.usersStore.getCurrentUser.posts.push({
           place: this.place,
           country: this.country,
           description: this.description,
           date: this.date,
-          image: this.imageDetail,
-          likes: parseInt(currentLikes),
+          image: url,
+          likes: 0,
         });
 
         this.usersStore.save();
+
         this.$emit("close");
+          });
+        });
+     
       } else {
         alert("Please fill all the data.");
       }
@@ -175,6 +196,7 @@ export default {
       selectedCountry: "",
       des: "",
       date: "",
+      file : ""
     };
   },
   mounted() {
@@ -341,23 +363,22 @@ export default {
         height: 350px;
         margin-bottom: 20px;
       }
-       &--right {
+      &--right {
         width: 350px;
         height: 300px;
       }
     }
 
-    .imageDetail{
-       width: 350px;
-        height: 350px;
-
+    .imageDetail {
+      width: 350px;
+      height: 350px;
     }
 
-    .backdrop{
+    .backdrop {
       overflow: hidden;
     }
 
-    .main{
+    .main {
       overflow: hidden;
     }
   }

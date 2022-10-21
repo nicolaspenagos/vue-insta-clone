@@ -143,10 +143,32 @@ export default {
 
   watch: {
     update() {
-      console.log("dmsk");
       this.currentPosts = this.usersStore.getCurrentUser.posts.length;
       this.reloadToShow();
       this.filterValue = "";
+    },
+    currentUser() {
+      let currentUser = this.usersStore.getCurrentUser;
+      this.currentUsername = currentUser.username;
+      this.currentUserEmail = currentUser.email;
+      this.currentFollowers = currentUser.followers;
+      this.currentFollowing = currentUser.following;
+      this.currentPosts =
+        currentUser.posts != null && currentUser.posts != null
+          ? currentUser.posts.length
+          : 0;
+      console.log("+++");
+        this.currentPosts =
+      currentUser.posts != null && currentUser.posts != null
+        ? currentUser.posts.length
+        : 0;
+    // this.currentsPostsArray = currentUser.posts;
+    //this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
+    let arr = currentUser.posts;
+    this.currentsPostsArray = arr;
+    this.arrayToShow = arr;
+    console.log("+++");
+   
     },
   },
   data() {
@@ -159,7 +181,7 @@ export default {
       currentFollowers: 0,
       currentFollowing: 0,
       currentPosts: 0,
-      currentsPostsArray: [1, 2, 3],
+      currentsPostsArray: [],
       arrayToShow: [],
       filterKey: "",
       filterValue: "",
@@ -169,6 +191,13 @@ export default {
   computed: {
     ...mapStores(useUsersStore),
     creatorImage() {
+      const url = this.usersStore.getCurrentUser.url;
+      if (url != undefined && url != null) {
+        return this.usersStore.getCurrentUser.url;
+      } else {
+        return this.defaultUserImagePath;
+      }
+      /*
       if (
         this.usersStore.getCurrentUser != null &&
         this.usersStore.getCurrentUser.userPicture != null
@@ -179,7 +208,10 @@ export default {
             : this.userImagePath;
         else return this.usersStore.getCurrentUser.userPicture;
       }
-      return this.defaultUserImagePath;
+      return this.defaultUserImagePath;*/
+    },
+    currentUser() {
+      return this.usersStore.getCurrentUser;
     },
     username() {
       return this.currentUsername;
@@ -201,14 +233,36 @@ export default {
     },
   },
   mounted() {
+    console.log(this.usersStore.getCurrentUser);
     let currentUser = this.usersStore.getCurrentUser;
     this.currentUsername = currentUser.username;
     this.currentUserEmail = currentUser.email;
     this.currentFollowers = currentUser.followers;
     this.currentFollowing = currentUser.following;
-    this.currentPosts = currentUser.posts.length;
-    this.currentsPostsArray = currentUser.posts;
-    this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
+    this.currentPosts =
+      currentUser.posts != null && currentUser.posts != null
+        ? currentUser.posts.length
+        : 0;
+    // this.currentsPostsArray = currentUser.posts;
+    //this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
+    let arr = currentUser.posts;
+    this.currentsPostsArray = [];
+    this.arrayToShow = [];
+    console.log("holaa");
+    console.log(arr);
+    
+    arr.forEach((p) => {
+      this.currentsPostsArray.push({ ...p });
+         console.log("holaa2");
+      this.arrayToShow.push({ country:p.country, date:p.date, description:p.description, image:p.image, likes:p.likes, place:p.place });
+
+   
+    });
+
+     console.log(arr);
+ 
+    
+
   },
   components: { Post },
 };
@@ -236,6 +290,10 @@ export default {
 }
 .username {
   font-weight: 500;
+}
+
+.msg {
+  text-align: center;
 }
 .tag {
   font-weight: 400;
@@ -276,7 +334,7 @@ export default {
   grid-template-columns: auto auto auto auto;
   margin: 25px;
   margin-top: -50px;
-  &__container{
+  &__container {
     padding-bottom: 75px;
   }
 }
@@ -299,7 +357,6 @@ export default {
 }
 
 @media (max-width: 600px) {
-
   .content {
     padding: 0;
   }
@@ -347,7 +404,6 @@ export default {
 
   .posts {
     grid-template-columns: auto;
-    
   }
 
   .sepline {

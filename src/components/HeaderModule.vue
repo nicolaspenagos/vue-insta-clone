@@ -15,6 +15,7 @@
         :src="creatorImage"
         class="image image--user"
         @error="imageError = true"
+        @click="logout"
       />
     </div>
   </header>
@@ -23,6 +24,7 @@
 <script>
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
+import { useAuthenticationStore } from "../stores/authentication";
 export default {
   data() {
     return {
@@ -40,24 +42,27 @@ export default {
       this.$emit("open");
     },
     logout() {
-      this.usersStore.logout();
+  
+     // this.usersStore.logout();
+       this.authenticationStore.logOut();
     },
   },
   computed: {
-    ...mapStores(useUsersStore),
+    ...mapStores(useUsersStore, useAuthenticationStore),
+
     creatorImage() {
-      if (this.usersStore.getCurrentUser!=null&&this.usersStore.getCurrentUser.userPicture!=null) {
-        if (this.usersStore.getCurrentUser.userPicture == "")
-          return this.imageError
-            ? this.defaultUserImagePath
-            : this.userImagePath;
-        else return this.usersStore.getCurrentUser.userPicture;
+      
+      const url = this.usersStore.getCurrentUser.url;
+      console.log(url);
+      if(url!=undefined&&url!=null){
+        return this.usersStore.getCurrentUser.url;
+      }else{
+        return this.defaultUserImagePath;
       }
-      return this.defaultUserImagePath;
     },
   },
   mounted() {
-    console.log(this.usersStore.getCurrentUser);
+    //console.log(this.usersStore.getCurrentUser);
   },
 };
 </script>

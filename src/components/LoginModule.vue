@@ -55,9 +55,16 @@
 import draggable from "vuedraggable";
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
+import { useAuthenticationStore } from "../stores/authentication";
 import router from "@/router";
 
 export default {
+  watch: {
+    currentUser() {
+      console.log('Current user changed');
+    },
+  },
+
   setup() {
     //const route = useRoute()
   },
@@ -86,19 +93,22 @@ export default {
       username: "",
       userAlreadyExits: false,
       file: {},
-      imageString : ""
+      imageString: "",
+      errorMsg: "",
+      file: "",
     };
   },
   mounted() {
-    this.usersStore.loadUsers();
+ 
   },
   methods: {
     setImage(evt) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
-        this.imageString=reader.result;
+        this.imageString = reader.result;
       });
       reader.readAsDataURL(evt.target.files[0]);
+      this.file = evt.target.files[0];
     },
     onEnd: function (evt) {
       this.oldIndex = evt.oldIndex;
@@ -110,13 +120,28 @@ export default {
     },
     auth() {
       if (this.singUp) {
+        this.authenticationStore
+          .newUser(this.email, this.password, this.username)
+          .then((error) => {
+            if (error === "OK") {
+              //this.authenticationStore.addProfileImage();
+              this.authenticationStore.addUserImage(this.file).then((user) => {
+                if (user) {
+                  this.usersStore.setUser(user);
+                  router.push("/home");
+                }
+              });
+            } else {
+              this.errorMsg = error;
+              this.wrongCredentials = true;
+            }
+          });
 
-        this.usersStore.signup(this.email, this.password, this.username, this.imageString);
-        this.validateOperation();
+        //this.usersStore.signup(this.email, this.password, this.username, this.imageString);
+        //this.validateOperation();
       } else {
-      
-        this.usersStore.login(this.email, this.password);
-        this.validateOperation();
+        this.authenticationStore.signIn(this.email, this.password);
+        //this.validateOperation();
       }
     },
     validateOperation() {
@@ -141,17 +166,20 @@ export default {
     msg: String,
   },
   computed: {
-    ...mapStores(useUsersStore),
-
+    ...mapStores(useUsersStore, useAuthenticationStore),
+    userIsLogged() {
+      console.log(useUsersStore.getCurrentUser);
+    },
     text() {
       return this.singUp
         ? ["Sign Up", "Already have an account?", "Log In"]
         : ["Log In", "Don't have an account?", "Sign Up"];
     },
     credentialsMsg() {
-      return this.userAlreadyExits
-        ? "User already exits"
-        : "Wrong username, email or password";
+      return this.errorMsg;
+    },
+    currentUser() {
+      return this.usersStore.getCurrentUser;
     },
   },
 };
@@ -168,6 +196,9 @@ export default {
 
 .input {
   margin-top: 15px;
+}
+.emailInput {
+  margin-top: 0;
 }
 .button {
   margin-top: 15px;
