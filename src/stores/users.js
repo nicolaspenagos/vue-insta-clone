@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getDatabase, set, ref } from "firebase/database";
+import { getDatabase, set, ref, get } from "firebase/database";
 ///// OPTIONS STORE
 export const useUsersStore = defineStore("users", {
     state: () => ({
@@ -9,12 +9,14 @@ export const useUsersStore = defineStore("users", {
         ],
         localStorageUsers: [],
         currentUser: null,
-        selectedPost: null
+        selectedPost: null,
+        loggedUser: null
     }),
     getters: {
         getUsers: (state) => [...state.users],
         getCurrentUser: (state) => state.currentUser,
-        getSelectedPost: (state) => state.selectedPost
+        getSelectedPost: (state) => state.selectedPost,
+        getLoggedUser: (state) => state.loggedUser,
     },
     actions: {
 
@@ -89,6 +91,26 @@ export const useUsersStore = defineStore("users", {
         },
         setUsers(u) {
             this.users = u;
+        },
+        search(username) {
+            console.log('searching');
+            let founded = false;
+            this.users.forEach(u => {
+                if (u.username == username) {
+                    this.currentUser = u;
+                    founded = true;
+                }
+
+
+            });
+            if (!founded)
+                alert('User not found');
+
+
+        },
+        setLoggedUser(user) {
+            this.loggedUser = user;
+
         }
 
 

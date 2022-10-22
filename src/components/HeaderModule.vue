@@ -1,20 +1,14 @@
 <template>
-  
   <header class="header">
-
-       
     <img :src="instaPath" class="header__logo" />
-
 
     <div class="header__menu">
       <RouterLink to="/" @click="logout" class="text text--blue logout"
         >Log out</RouterLink
       >
 
-
-
-      <img :src="homeImagePath" class="image" />
-      <img :src="addImagePath" class="image" @click="openModal" />
+      <img :src="homeImagePath" class="image" @click="goToHome" />
+      <img :src="addImagePath" class="image" @click="openModal" v-if="showHome"/>
       <img
         :src="creatorImage"
         class="image image--user"
@@ -30,6 +24,11 @@ import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
 import { useAuthenticationStore } from "../stores/authentication";
 export default {
+  watch:{
+    currentUser(){
+      this.showHome =this.usersStore.getCurrentUser.email==this.usersStore.getLoggedUser.email;
+    }
+  },
   data() {
     return {
       imageError: false,
@@ -38,6 +37,7 @@ export default {
       homeImagePath: "./home.png",
       userImagePath: "./id_user.png",
       defaultUserImagePath: "./user.png",
+      showHome:true
     };
   },
   methods: {
@@ -46,28 +46,30 @@ export default {
       this.$emit("open");
     },
     logout() {
-  
-     // this.usersStore.logout();
-       this.authenticationStore.logOut();
+      // this.usersStore.logout();
+      this.authenticationStore.logOut();
+    },
+    goToHome() {
+      this.usersStore.setUser(this.usersStore.getLoggedUser);
+      this.$emit("cleanSearch");
     },
   },
+
   computed: {
     ...mapStores(useUsersStore, useAuthenticationStore),
 
     creatorImage() {
-      
-      const url = this.usersStore.getCurrentUser.url;
-      console.log(url);
-      if(url!=undefined&&url!=null){
-        return this.usersStore.getCurrentUser.url;
-      }else{
-        return this.defaultUserImagePath;
-      }
-    },
+      const url = this.usersStore.getLoggedUser.url;
+      if (url == "NoImage") return this.defaultUserImagePath;
+
+      return url;
+    },currentUser(){
+        //return this.usersStore.getCurrentUser.email==this.usersStore.getLoggedUser.email;
+        return this.usersStore.getCurrentUser;
+    }
+    
   },
-  mounted() {
-  
-  },
+  mounted() {},
 };
 </script>
 
@@ -119,14 +121,14 @@ export default {
 }
 
 @media (max-width: 600px) {
-.header{
-  width: 100vw;
-  &__logo{
-    margin-left: 30px;
+  .header {
+    width: 100vw;
+    &__logo {
+      margin-left: 30px;
+    }
+    &__menu {
+      margin-right: 30px;
+    }
   }
-  &__menu{
-    margin-right: 30px;
-  }
-}
 }
 </style>

@@ -29,11 +29,10 @@
     </section>
     <div class="sepline"></div>
     <div class="posts__container">
-
-        <div class="row search__row">
-          <label>Search</label>
-<input class="input search" />
-        </div>
+      <div class="row search__row">
+        <label>Search</label>
+        <input class="input search" v-model="searchValue" @change="search"/>
+      </div>
 
       <div class="filters row">
         <div class="row filter">
@@ -79,6 +78,10 @@ import Post from "./Post.vue";
 export default {
   props: ["update"],
   methods: {
+    search(){
+      if(this.searchValue!="")
+        this.usersStore.search(this.searchValue)
+    },
     openModal() {
       this.$emit("open");
     },
@@ -100,7 +103,6 @@ export default {
       );
     },
     sortByDate() {
-
       this.arrayToShow.sort(function (a, b) {
         let dateA = a.date.split(".");
         let dayA = parseInt(dateA[0]);
@@ -173,7 +175,16 @@ export default {
       let arr = currentUser.posts;
       this.currentsPostsArray = arr;
       this.arrayToShow = arr;
+      
+      console.log(this.usersStore.getCurrentUser.email == this.usersStore.getLoggedUser.email);
+      console.log(this.usersStore.getLoggedUser.email);
+      if(this.usersStore.getCurrentUser.email == this.usersStore.getLoggedUser.email){
+    
+        this.searchValue=""
+      }
+      
 
+     
     },
   },
   data() {
@@ -191,16 +202,16 @@ export default {
       filterKey: "",
       filterValue: "",
       sortKey: "",
+      searchValue:""
     };
   },
   computed: {
     ...mapStores(useUsersStore),
     creatorImage() {
       const url = this.usersStore.getCurrentUser.url;
+      if (url == "NoImage") return this.defaultUserImagePath;
       if (url != undefined && url != null) {
         return this.usersStore.getCurrentUser.url;
-      } else {
-        return this.defaultUserImagePath;
       }
       /*
       if (
@@ -238,7 +249,6 @@ export default {
     },
   },
   mounted() {
-
     let currentUser = this.usersStore.getCurrentUser;
     this.currentUsername = currentUser.username;
     this.currentUserEmail = currentUser.email;
@@ -253,26 +263,21 @@ export default {
     let arr = currentUser.posts;
     this.currentsPostsArray = [];
     this.arrayToShow = [];
-   
 
+    if (arr) {
+      arr.forEach((p) => {
+        this.currentsPostsArray.push({ ...p });
 
-    if(arr){
-arr.forEach((p) => {
-      this.currentsPostsArray.push({ ...p });
-
-      this.arrayToShow.push({
-        country: p.country,
-        date: p.date,
-        description: p.description,
-        image: p.image,
-        likes: p.likes,
-        place: p.place,
+        this.arrayToShow.push({
+          country: p.country,
+          date: p.date,
+          description: p.description,
+          image: p.image,
+          likes: p.likes,
+          place: p.place,
+        });
       });
-    });
     }
-    
-
-
   },
   components: { Post },
 };
@@ -315,11 +320,10 @@ arr.forEach((p) => {
   margin-right: 5px;
 }
 
-.search{
-  
+.search {
   width: 370px;
   margin-left: 18px;
-  &__row{
+  &__row {
     padding-left: 30px;
     padding-top: 30px;
     align-items: center;

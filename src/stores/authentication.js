@@ -35,6 +35,8 @@ export const useAuthenticationStore = defineStore("authentication", {
         },
         async newUser(emailInput, passwordInput, usernameInput) {
 
+            console.log("=========== xxxxx");
+
             return createUserWithEmailAndPassword(auth, emailInput, passwordInput, usernameInput)
                 .then((userCredential) => {
 
@@ -61,21 +63,31 @@ export const useAuthenticationStore = defineStore("authentication", {
         },
         async addUserImage(image) {
 
+
+            console.log(image == null);
+            console.log(image == "");
             const storage = getStorage();
             const fileRef = ref_st(storage, 'images/' + this.user.uid);
 
 
-            return uploadBytes(fileRef, image).then((snapshot) => {
+            if (image == "") {
+                this.user = {...this.user, url: "NoImage" }
+                return this.addUser();
 
-                return getDownloadURL(ref_st(storage, 'images/' + this.user.uid)).then((url) => {
+            } else {
+                return uploadBytes(fileRef, image).then((snapshot) => {
 
-                    this.user = {...this.user, url: url }
-                    return this.addUser();
+                    return getDownloadURL(ref_st(storage, 'images/' + this.user.uid)).then((url) => {
+
+                        this.user = {...this.user, url: url }
+                        return this.addUser();
+
+                    });
+
 
                 });
 
-
-            });
+            }
 
 
 
@@ -96,6 +108,7 @@ export const useAuthenticationStore = defineStore("authentication", {
 
             return set(ref_db(db, 'users/' + this.user.uid), this.user).then(() => {
                 this.currentUser = this.user;
+
                 return this.currentUser;
             });
 

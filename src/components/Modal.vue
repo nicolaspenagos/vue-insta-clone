@@ -131,6 +131,7 @@ export default {
         let rand = this.uuidv4();
         const fileRef = ref_st(storage, "images/" +  this.usersStore.getCurrentUser.uid+"/"+rand );
 
+       
         uploadBytes(fileRef, this.file).then((snapshot) => {
           getDownloadURL(
             ref_st(storage, "images/" + this.usersStore.getCurrentUser.uid+"/"+rand )

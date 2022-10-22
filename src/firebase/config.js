@@ -41,6 +41,7 @@ onAuthStateChanged(auth, (user) => {
 
                 auth.loggedUser = snapshot.val();
                 userStore.setUser(snapshot.val());
+                userStore.setLoggedUser(snapshot.val());
                 authStore.goToHome();
 
             } else {
@@ -87,6 +88,7 @@ onAuthStateChanged(auth, (user) => {
         authStore.user = null;
         auth.loggedUser = null;
         userStore.setUser(null);
+        userStore.setLoggedUser(null);
     }
 });
 

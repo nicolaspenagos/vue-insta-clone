@@ -56,12 +56,15 @@ import draggable from "vuedraggable";
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
 import { useAuthenticationStore } from "../stores/authentication";
+
+import { getDatabase, ref, child, get } from "firebase/database";
+
 import router from "@/router";
 
 export default {
   watch: {
     currentUser() {
-      console.log('Current user changed');
+      console.log("Current user changed");
     },
   },
 
@@ -98,9 +101,7 @@ export default {
       file: "",
     };
   },
-  mounted() {
- 
-  },
+  mounted() {},
   methods: {
     setImage(evt) {
       const reader = new FileReader();
@@ -120,22 +121,32 @@ export default {
     },
     auth() {
       if (this.singUp) {
-        this.authenticationStore
-          .newUser(this.email, this.password, this.username)
-          .then((error) => {
-            if (error === "OK") {
-              //this.authenticationStore.addProfileImage();
-              this.authenticationStore.addUserImage(this.file).then((user) => {
-                if (user) {
-                  this.usersStore.setUser(user);
-                  router.push("/home");
+        let usersToCheck = this.usersStore.getUsers;
+
+        if (usersToCheck.length <= 0) {
+          const dbRef = ref(getDatabase());
+          get(child(dbRef, `users/`))
+            .then((snapshot) => {
+              let usersToCheck = [];
+
+              if (snapshot.val() != null) {
+                 const data = snapshot.val();
+                const dbUsers = Object.keys(data);
+
+                for (let i = 0; i < dbUsers.length; i++) {
+                  let key = dbUsers[i];
+                  usersToCheck.push(data[key]);
                 }
-              });
-            } else {
-              this.errorMsg = error;
-              this.wrongCredentials = true;
-            }
-          });
+              }
+
+              this.auth2(usersToCheck);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          this.auth2(usersToCheck);
+        }
 
         //this.usersStore.signup(this.email, this.password, this.username, this.imageString);
         //this.validateOperation();
@@ -159,6 +170,42 @@ export default {
         this.email = "";
         this.password = "";
         this.username = "";
+      }
+    },
+
+    auth2(usersToCheck) {
+      console.log(usersToCheck);
+      let _continue = true;
+
+      usersToCheck.forEach((u) => {
+        if (u.username == this.username) {
+          this.errorMsg = "Username not available";
+          this.wrongCredentials = true;
+          _continue = false;
+        }
+      });
+
+      console.log(_continue);
+      if (_continue) {
+        console.log("AAAAAA");
+        this.authenticationStore
+          .newUser(this.email, this.password, this.username)
+          .then((error) => {
+            if (error === "OK") {
+              //this.authenticationStore.addProfileImage();
+
+              this.authenticationStore.addUserImage(this.file).then((user) => {
+                if (user) {
+                  this.usersStore.setUser(user);
+                  this.usersStore.setLoggedUser(user);
+                  router.push("/home");
+                }
+              });
+            } else {
+              this.errorMsg = error;
+              this.wrongCredentials = true;
+            }
+          });
       }
     },
   },
