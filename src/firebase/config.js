@@ -25,19 +25,19 @@ let loggedUser = null;
 onAuthStateChanged(auth, (user) => {
     const authStore = useAuthenticationStore()
     const userStore = useUsersStore();
-    console.log('NUEVOO - A');
+
 
     if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         loggedUser = user;
-        console.log(user.uid);
+
         const dbRef = ref(getDatabase());
-        console.log('NUEVOO - B');
+
         get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
             if (snapshot.exists()) {
 
-                console.log('NUEVOO - C');
+
 
                 auth.loggedUser = snapshot.val();
                 userStore.setUser(snapshot.val());
@@ -71,12 +71,8 @@ onAuthStateChanged(auth, (user) => {
 
             userStore.setUsers(usersToSaveInStore);
 
-            console.log()
-                /*
-                data.forEach((u) => {
-                    console.log(u.val());
-                });*/
-                //userStore.setUsers(data);
+
+
         });
 
 

@@ -60,13 +60,7 @@
             </h3>
           </div>
           <div class="row">
-            <input
-              type="”number”"
-              placeholder="likes"
-              class="input input--likes"
-              v-model="likes"
-            />
-            <img :src="heartpath" class="heart" />
+            
           </div>
         </div>
         <input placeholder="Color" class="input input--place" v-model="place" />
@@ -170,10 +164,11 @@ export default {
       return this.imageDetail;
     },
     userPic() {
-      if (this.usersStore.getCurrentUser.userPicture == "") {
-        return "./user.png";
+        const url = this.usersStore.getCurrentUser.url;
+      if (url != undefined && url != null) {
+        return this.usersStore.getCurrentUser.url;
       } else {
-        return this.usersStore.getCurrentUser.userPicture;
+        return this.defaultUserImagePath;
       }
     },
   },

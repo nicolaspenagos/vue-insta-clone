@@ -4,10 +4,14 @@
 
        
     <img :src="instaPath" class="header__logo" />
+
+
     <div class="header__menu">
       <RouterLink to="/" @click="logout" class="text text--blue logout"
         >Log out</RouterLink
       >
+
+
 
       <img :src="homeImagePath" class="image" />
       <img :src="addImagePath" class="image" @click="openModal" />
@@ -62,7 +66,7 @@ export default {
     },
   },
   mounted() {
-    //console.log(this.usersStore.getCurrentUser);
+  
   },
 };
 </script>

@@ -29,13 +29,19 @@
     </section>
     <div class="sepline"></div>
     <div class="posts__container">
+
+        <div class="row search__row">
+          <label>Search</label>
+<input class="input search" />
+        </div>
+
       <div class="filters row">
         <div class="row filter">
           <label class="label">Filter by:</label>
           <select class="input filter--input" v-model="filterKey">
             <option value="" selected disabled hidden>Choose here</option>
             <option>Tag</option>
-            <option>Color</option>
+            <option>Title</option>
           </select>
           <input
             class="input filter--input"
@@ -80,7 +86,7 @@ export default {
       this.reloadToShow();
       if (this.filterKey == "Tag" && this.filterValue != "")
         this.filterByCountry(this.filterValue);
-      if (this.filterKey == "Color" && this.filterValue != "")
+      if (this.filterKey == "Title" && this.filterValue != "")
         this.filterByPlace(this.filterValue);
     },
     sort() {
@@ -94,7 +100,7 @@ export default {
       );
     },
     sortByDate() {
-      console.log("aaa");
+
       this.arrayToShow.sort(function (a, b) {
         let dateA = a.date.split(".");
         let dayA = parseInt(dateA[0]);
@@ -157,18 +163,17 @@ export default {
         currentUser.posts != null && currentUser.posts != null
           ? currentUser.posts.length
           : 0;
-      console.log("+++");
-        this.currentPosts =
-      currentUser.posts != null && currentUser.posts != null
-        ? currentUser.posts.length
-        : 0;
-    // this.currentsPostsArray = currentUser.posts;
-    //this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
-    let arr = currentUser.posts;
-    this.currentsPostsArray = arr;
-    this.arrayToShow = arr;
-    console.log("+++");
-   
+
+      this.currentPosts =
+        currentUser.posts != null && currentUser.posts != null
+          ? currentUser.posts.length
+          : 0;
+      // this.currentsPostsArray = currentUser.posts;
+      //this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
+      let arr = currentUser.posts;
+      this.currentsPostsArray = arr;
+      this.arrayToShow = arr;
+
     },
   },
   data() {
@@ -233,7 +238,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.usersStore.getCurrentUser);
+
     let currentUser = this.usersStore.getCurrentUser;
     this.currentUsername = currentUser.username;
     this.currentUserEmail = currentUser.email;
@@ -248,20 +253,25 @@ export default {
     let arr = currentUser.posts;
     this.currentsPostsArray = [];
     this.arrayToShow = [];
-    console.log("holaa");
-    console.log(arr);
-    
-    arr.forEach((p) => {
-      this.currentsPostsArray.push({ ...p });
-         console.log("holaa2");
-      this.arrayToShow.push({ country:p.country, date:p.date, description:p.description, image:p.image, likes:p.likes, place:p.place });
-
    
-    });
 
-     console.log(arr);
- 
+
+    if(arr){
+arr.forEach((p) => {
+      this.currentsPostsArray.push({ ...p });
+
+      this.arrayToShow.push({
+        country: p.country,
+        date: p.date,
+        description: p.description,
+        image: p.image,
+        likes: p.likes,
+        place: p.place,
+      });
+    });
+    }
     
+
 
   },
   components: { Post },
@@ -305,6 +315,17 @@ export default {
   margin-right: 5px;
 }
 
+.search{
+  
+  width: 370px;
+  margin-left: 18px;
+  &__row{
+    padding-left: 30px;
+    padding-top: 30px;
+    align-items: center;
+  }
+}
+
 .info {
   &__details {
     display: flex;
@@ -342,6 +363,7 @@ export default {
 .filters {
   justify-content: space-between;
   padding: 30px;
+  padding-top: 15px;
 }
 
 .filter {

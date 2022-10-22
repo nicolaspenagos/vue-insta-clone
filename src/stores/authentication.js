@@ -20,12 +20,12 @@ export const useAuthenticationStore = defineStore("authentication", {
     }),
     actions: {
         signIn(email, password) {
-            console.log('llamando sign in')
+
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
-                    console.log('usuario loggeado', user)
+
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -54,7 +54,7 @@ export const useAuthenticationStore = defineStore("authentication", {
 
 
             signOut(auth).then(() => {
-                console.log('usuario fuera')
+
             }).catch((error) => {
                 alert(error);
             });
@@ -68,7 +68,7 @@ export const useAuthenticationStore = defineStore("authentication", {
             return uploadBytes(fileRef, image).then((snapshot) => {
 
                 return getDownloadURL(ref_st(storage, 'images/' + this.user.uid)).then((url) => {
-                    console.log('=== ' + url);
+
                     this.user = {...this.user, url: url }
                     return this.addUser();
 
@@ -92,8 +92,7 @@ export const useAuthenticationStore = defineStore("authentication", {
             const db = getDatabase();
 
 
-            console.log(this.user);
-            console.log(db);
+
 
             return set(ref_db(db, 'users/' + this.user.uid), this.user).then(() => {
                 this.currentUser = this.user;

@@ -20,7 +20,7 @@ export const useUsersStore = defineStore("users", {
 
         save() {
             const db = getDatabase();
-            console.log(this.currentUser);
+
             set(ref(db, 'users/' + this.currentUser.uid), {
                 ...this.currentUser
             });
@@ -79,9 +79,8 @@ export const useUsersStore = defineStore("users", {
         },
         setPost(post) {
             this.selectedPost = post;
-            console.log('aaa');
-            console.log(post);
-            console.log('bbb')
+
+
         },
         setUser(user) {
 
