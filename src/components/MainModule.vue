@@ -275,6 +275,7 @@ export default {
           image: p.image,
           likes: p.likes,
           place: p.place,
+          postId:p.postId
         });
       });
     }

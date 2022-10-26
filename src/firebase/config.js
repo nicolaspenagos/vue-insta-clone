@@ -57,20 +57,25 @@ onAuthStateChanged(auth, (user) => {
         const usersRef = ref(database, 'users/');
         onValue(usersRef, (snapshot) => {
             const data = snapshot.val();
-            const dbUsers = Object.keys(data);
+            if (snapshot.val()) {
+                const dbUsers = Object.keys(data);
 
-            let usersToSaveInStore = [];
-            let currentToSave = null;
-            for (let i = 0; i < dbUsers.length; i++) {
-                let key = dbUsers[i];
-                usersToSaveInStore.push(data[key]);
-                if (key == user.uid) {
-                    userStore.setUser(data[key]);
+                let usersToSaveInStore = [];
+                let currentToSave = null;
+                for (let i = 0; i < dbUsers.length; i++) {
+                    let key = dbUsers[i];
+                    usersToSaveInStore.push(data[key]);
+                    if (key == user.uid) {
+                        userStore.setUser(data[key]);
+                    }
+
                 }
 
+                userStore.setUsers(usersToSaveInStore);
+            } else {
+                userStore.setUsers([]);
             }
 
-            userStore.setUsers(usersToSaveInStore);
 
 
 

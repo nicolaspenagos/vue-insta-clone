@@ -22,8 +22,8 @@
         <div class="row row--button">
           <div class="s-subtitle input--date">{{ this.date }}</div>
           <div class="row">
-            <div class="div--likes s-likes">{{ this.selectedLikes }}</div>
-            <img :src="heartpath" class="heart heart--likes" />
+            <div class="div--likes s-likes">{{likesCount()}}</div>
+            <img :src="heartpath" class="heart heart--likes" @click="addLike" />
           </div>
         </div>
       </aside>
@@ -59,9 +59,7 @@
               {{ this.usersStore.getCurrentUser.username }}
             </h3>
           </div>
-          <div class="row">
-            
-          </div>
+          <div class="row"></div>
         </div>
         <input placeholder="Color" class="input input--place" v-model="place" />
         <input
@@ -87,7 +85,12 @@
 import { computed } from "@vue/reactivity";
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
-import { getStorage, ref as ref_st, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref as ref_st,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 
 export default {
   props: {
@@ -96,11 +99,31 @@ export default {
     titleColor: String,
   },
   methods: {
+    addLike() {
+      let loggedUserUid = this.usersStore.getLoggedUser.uid;
+      let postId = this.usersStore.getSelectedPost.postId;
+    
+
+    
+  
+
+
+       this.usersStore.setLike(loggedUserUid, postId);
+  
+
+    },
+    likesCount(){
+
+      return this.usersStore.getSelectedPost.likes?this.usersStore.getSelectedPost.likes.length:0;
+    },
     uuidv4() {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  )
-},
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        (
+          c ^
+          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+        ).toString(16)
+      );
+    },
     cerrarModal() {
       this.$emit("close");
     },
@@ -129,28 +152,33 @@ export default {
 
         const storage = getStorage();
         let rand = this.uuidv4();
-        const fileRef = ref_st(storage, "images/" +  this.usersStore.getCurrentUser.uid+"/"+rand );
+        const fileRef = ref_st(
+          storage,
+          "images/" + this.usersStore.getCurrentUser.uid + "/" + rand
+        );
 
-       
         uploadBytes(fileRef, this.file).then((snapshot) => {
           getDownloadURL(
-            ref_st(storage, "images/" + this.usersStore.getCurrentUser.uid+"/"+rand )
+            ref_st(
+              storage,
+              "images/" + this.usersStore.getCurrentUser.uid + "/" + rand
+            )
           ).then((url) => {
             this.usersStore.getCurrentUser.posts.push({
-          place: this.place,
-          country: this.country,
-          description: this.description,
-          date: this.date,
-          image: url,
-          likes: 0,
-        });
+              place: this.place,
+              country: this.country,
+              description: this.description,
+              date: this.date,
+              image: url,
+              likes: [],
+              postId: rand
+            });
 
-        this.usersStore.save();
+            this.usersStore.save();
 
-        this.$emit("close");
+            this.$emit("close");
           });
         });
-     
       } else {
         alert("Please fill all the data.");
       }
@@ -165,13 +193,14 @@ export default {
       return this.imageDetail;
     },
     userPic() {
-        const url = this.usersStore.getCurrentUser.url;
+      const url = this.usersStore.getCurrentUser.url;
       if (url != undefined && url != null) {
         return this.usersStore.getCurrentUser.url;
       } else {
         return this.defaultUserImagePath;
       }
     },
+    heartPic() {},
   },
   data() {
     return {
@@ -192,7 +221,7 @@ export default {
       selectedCountry: "",
       des: "",
       date: "",
-      file : ""
+      file: "",
     };
   },
   mounted() {

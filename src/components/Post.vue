@@ -11,7 +11,7 @@
           <div class="date subtitle">{{ this.post.date }}</div>
           <div class="row">
             <img :src="heartpath" class="heart" />
-            <div class="likes subtitle">{{ this.post.likes }}</div>
+            <div class="likes subtitle">{{ this.likesCount() }}</div>
           </div>
         </div>
       </div>
@@ -31,11 +31,15 @@ export default {
       this.usersStore.setPost(this.post);
       this.$emit("open");
     },
+    likesCount(){
+      return this.post.likes?this.post.likes.length:0;
+    }
   },
   data() {
     return {
       image: "",
       heartpath: "./heart.png",
+      likesLenght:this.post.likes?this.post.likes.length:0
     };
   },
 
@@ -44,6 +48,9 @@ export default {
     image() {
       return this.post.image;
     },
+  
+
+
   },
 };
 </script>

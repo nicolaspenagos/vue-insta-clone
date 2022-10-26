@@ -111,6 +111,38 @@ export const useUsersStore = defineStore("users", {
         setLoggedUser(user) {
             this.loggedUser = user;
 
+        },
+        setLike(loggUserId, idPost) {
+            console.log(idPost + " " + loggUserId);
+
+            let stop = false;
+            for (let i = 0; i < this.users.length && !false; i++) {
+                let posts_user_i = this.users[i].posts;
+
+                if (posts_user_i) {
+                    for (let j = 0; j < posts_user_i.length && !stop; j++) {
+                        if (posts_user_i[j].postId == idPost) {
+                            stop = true;
+                            if (this.users[i].posts[j].likes && !this.users[i].posts[j].likes.includes(loggUserId)) {
+                                this.users[i].posts[j].likes.push(loggUserId);
+                            } else {
+                                this.users[i].posts[j] = {...this.users[i].posts[j], likes: [loggUserId] }
+                            }
+
+                            this.selectedPost = this.users[i].posts[j];
+                            const db = getDatabase();
+                            set(ref(db, 'users/' + this.users[i].uid), {
+                                ...this.users[i]
+                            });
+
+                        }
+                    }
+                }
+
+
+
+
+            }
         }
 
 
