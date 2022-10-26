@@ -10,8 +10,8 @@
         <div class="post-r">
           <div class="date subtitle">{{ this.post.date }}</div>
           <div class="row">
-            <img :src="heartpath" class="heart" />
-            <div class="likes subtitle">{{ this.likesCount() }}</div>
+           <!-- <img :src="heartpath" class="heart" />-->
+            <div class="likes subtitle">{{"Likes:"+ this.likesCount() }}</div>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       image: "",
-      heartpath: "./heart.png",
+    
       likesLenght:this.post.likes?this.post.likes.length:0
     };
   },
@@ -48,6 +48,7 @@ export default {
     image() {
       return this.post.image;
     },
+
   
 
 

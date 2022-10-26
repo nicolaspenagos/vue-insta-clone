@@ -47,11 +47,19 @@ export default {
     },
     logout() {
       // this.usersStore.logout();
-      this.authenticationStore.logOut();
+      this.usersStore.updateUserChanged().then(
+        ()=>{
+
+          this.authenticationStore.logOut();
+        }
+      );
+      
+      
     },
     goToHome() {
       this.usersStore.setUser(this.usersStore.getLoggedUser);
       this.$emit("cleanSearch");
+      this.usersStore.updateUserChanged();
     },
   },
 

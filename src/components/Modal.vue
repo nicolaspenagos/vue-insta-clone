@@ -22,8 +22,9 @@
         <div class="row row--button">
           <div class="s-subtitle input--date">{{ this.date }}</div>
           <div class="row">
-            <div class="div--likes s-likes">{{likesCount()}}</div>
-            <img :src="heartpath" class="heart heart--likes" @click="addLike" />
+            <button class="text x text--blue showLikesBtn" @click="showLikes" v-if="likesCount()>0">See likes</button>
+            <div class="div--likes s-likes">{{ likesCount() }}</div>
+            <img :src="heartPath()" class="heart heart--likes" @click="addLike" />
           </div>
         </div>
       </aside>
@@ -99,22 +100,42 @@ export default {
     titleColor: String,
   },
   methods: {
+    showLikes(){
+      let msgTemplate = "";
+      this.usersStore.getSelectedPost.likes.forEach(id=>{
+        for(let i = 0; i<this.usersStore.users.length;i++){
+          let user_i = this.usersStore.users[i];
+          if(user_i.uid==id){
+            msgTemplate+=user_i.username+"\n";
+          }
+        }
+      });
+      alert(msgTemplate);
+    },
+     heartPath() {
+      console.log(this.usersStore.getSelectedPost.likes);
+      console.log(this.usersStore.loggedUser.uid);
+      if (this.usersStore.getSelectedPost.likes&&this.usersStore.getSelectedPost.likes.includes(this.usersStore.loggedUser.uid)) {
+        return "./heart.png";
+      }
+      return "./white_heart.png";
+    },
     addLike() {
       let loggedUserUid = this.usersStore.getLoggedUser.uid;
       let postId = this.usersStore.getSelectedPost.postId;
-    
 
-    
-  
+      if(this.usersStore.getSelectedPost.likes&&this.usersStore.getSelectedPost.likes.includes(this.usersStore.loggedUser.uid)){
+          this.usersStore.setLike(loggedUserUid, postId);
+      }else{
+          this.usersStore.setLike(loggedUserUid, postId);
+      }
 
-
-       this.usersStore.setLike(loggedUserUid, postId);
-  
-
+      
     },
-    likesCount(){
-
-      return this.usersStore.getSelectedPost.likes?this.usersStore.getSelectedPost.likes.length:0;
+    likesCount() {
+      return this.usersStore.getSelectedPost.likes
+        ? this.usersStore.getSelectedPost.likes.length
+        : 0;
     },
     uuidv4() {
       return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -171,7 +192,7 @@ export default {
               date: this.date,
               image: url,
               likes: [],
-              postId: rand
+              postId: rand,
             });
 
             this.usersStore.save();
@@ -200,7 +221,8 @@ export default {
         return this.defaultUserImagePath;
       }
     },
-    heartPic() {},
+
+   
   },
   data() {
     return {
@@ -354,6 +376,12 @@ export default {
     width: 390px;
     padding: 30px;
   }
+}
+
+.showLikesBtn{
+
+  margin-bottom: 35px;
+  margin-right: 10px;
 }
 .modal {
   display: flex;

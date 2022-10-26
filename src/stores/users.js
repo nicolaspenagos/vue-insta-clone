@@ -10,7 +10,8 @@ export const useUsersStore = defineStore("users", {
         localStorageUsers: [],
         currentUser: null,
         selectedPost: null,
-        loggedUser: null
+        loggedUser: null,
+        lastestUserChanged: null
     }),
     getters: {
         getUsers: (state) => [...state.users],
@@ -113,7 +114,7 @@ export const useUsersStore = defineStore("users", {
 
         },
         setLike(loggUserId, idPost) {
-            console.log(idPost + " " + loggUserId);
+            console.log("===>" + idPost + " " + loggUserId);
 
             let stop = false;
             for (let i = 0; i < this.users.length && !false; i++) {
@@ -123,27 +124,58 @@ export const useUsersStore = defineStore("users", {
                     for (let j = 0; j < posts_user_i.length && !stop; j++) {
                         if (posts_user_i[j].postId == idPost) {
                             stop = true;
-                            if (this.users[i].posts[j].likes && !this.users[i].posts[j].likes.includes(loggUserId)) {
-                                this.users[i].posts[j].likes.push(loggUserId);
+                            if (this.users[i].posts[j].likes) {
+                                if (!this.users[i].posts[j].likes.includes(loggUserId)) {
+                                    this.users[i].posts[j].likes.push(loggUserId);
+                                } else {
+                                    //let indexToRemove = 0;
+                                    //For te get index to remove
+                                    //const elementos3 = [...elementos.slice(0, indiceAEliminar), ...elementos.slice(indiceAEliminar += 1, elementos.lenght)]
+                                    let secondStop = false;
+                                    for (let k = 0; k < this.users[i].posts[j].likes.length && !secondStop; k++) {
+                                        if (this.users[i].posts[j].likes[k] == loggUserId) {
+                                            console.log("Hola");
+                                            secondStop = true;
+                                            let temp = this.users[i].posts[j].likes.pop();
+                                            if (this.users[i].posts[j].likes.length > 0)
+                                                this.users[i].posts[j].likes[k] = temp;
+                                        }
+                                    }
+                                    //this.users[i].posts[j].likes.push(loggUserId);
+                                }
                             } else {
                                 this.users[i].posts[j] = {...this.users[i].posts[j], likes: [loggUserId] }
                             }
 
                             this.selectedPost = this.users[i].posts[j];
-                            const db = getDatabase();
-                            set(ref(db, 'users/' + this.users[i].uid), {
-                                ...this.users[i]
-                            });
+                            this.lastestUserChanged = this.users[i];
+
+                            if (this.loggedUser.uid == this.currentUser.uid) {
+                                this.updateUserChanged();
+                            }
+
+
+
+
 
                         }
                     }
                 }
-
-
-
-
+            }
+        },
+        updateUserChanged() {
+            console.log("-->");
+            if (this.lastestUserChanged != null) {
+                const db = getDatabase();
+                return set(ref(db, 'users/' + this.lastestUserChanged.uid), {
+                    ...this.lastestUserChanged
+                }).then(() => {
+                    this.lastestUserChanged = null;
+                    return
+                });
             }
         }
+
 
 
 
