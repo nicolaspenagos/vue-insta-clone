@@ -7,6 +7,7 @@
         >Log out</RouterLink
       >
 
+      <img :src="hearPath" class="image heart" @click="goToLikes" v-if="showHome"/>
       <img :src="homeImagePath" class="image" @click="goToHome" />
       <img :src="addImagePath" class="image" @click="openModal" v-if="showHome"/>
       <img
@@ -37,7 +38,8 @@ export default {
       homeImagePath: "./home.png",
       userImagePath: "./id_user.png",
       defaultUserImagePath: "./user.png",
-      showHome:true
+      showHome:true,
+      hearPath:"./heart.png"
     };
   },
   methods: {
@@ -61,6 +63,12 @@ export default {
       this.$emit("cleanSearch");
       this.usersStore.updateUserChanged();
     },
+    goToLikes(){
+      this.usersStore.updateLoggedUserLikesArray();
+      this.usersStore.setShowLikes(true);
+      this.$emit("open");
+
+    }
   },
 
   computed: {
@@ -112,6 +120,11 @@ export default {
     align-items: center;
     justify-content: center;
   }
+}
+.heart{
+  width: 20px !important;
+  height: 20px !important;
+  opacity: 0.87;
 }
 
 .image {

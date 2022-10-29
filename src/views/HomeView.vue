@@ -38,6 +38,8 @@ export default {
       document.body.style="overflow:auto";
        document.querySelector('.main--res').style ="overflow:auto";
       this.usersStore.setPost(null);
+      this.usersStore.setShowLikes(false);
+      this.usersStore.clearShowLikes();
       this.showModal1 = false;
       this.update = this.usersStore.getCurrentUser.posts.length;
     },

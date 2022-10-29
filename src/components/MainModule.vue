@@ -176,8 +176,7 @@ export default {
       this.currentsPostsArray = arr;
       this.arrayToShow = arr;
       
-      console.log(this.usersStore.getCurrentUser.email == this.usersStore.getLoggedUser.email);
-      console.log(this.usersStore.getLoggedUser.email);
+
       if(this.usersStore.getCurrentUser.email == this.usersStore.getLoggedUser.email){
     
         this.searchValue=""
@@ -247,6 +246,7 @@ export default {
     allPosts() {
       return this.usersStore.getCurrentUser.posts;
     },
+  
   },
   mounted() {
     let currentUser = this.usersStore.getCurrentUser;

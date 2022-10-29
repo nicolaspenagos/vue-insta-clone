@@ -32,6 +32,7 @@ export default {
       this.$emit("open");
     },
     likesCount(){
+     
       return this.post.likes?this.post.likes.length:0;
     }
   },

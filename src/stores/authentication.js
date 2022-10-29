@@ -35,7 +35,7 @@ export const useAuthenticationStore = defineStore("authentication", {
         },
         async newUser(emailInput, passwordInput, usernameInput) {
 
-            console.log("=========== xxxxx");
+
 
             return createUserWithEmailAndPassword(auth, emailInput, passwordInput, usernameInput)
                 .then((userCredential) => {
@@ -64,8 +64,8 @@ export const useAuthenticationStore = defineStore("authentication", {
         async addUserImage(image) {
 
 
-            console.log(image == null);
-            console.log(image == "");
+
+
             const storage = getStorage();
             const fileRef = ref_st(storage, 'images/' + this.user.uid);
 

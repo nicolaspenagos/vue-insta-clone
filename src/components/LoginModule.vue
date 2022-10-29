@@ -174,7 +174,7 @@ export default {
     },
 
     auth2(usersToCheck) {
-      console.log(usersToCheck);
+
       let _continue = true;
 
       usersToCheck.forEach((u) => {
@@ -185,9 +185,9 @@ export default {
         }
       });
 
-      console.log(_continue);
+
       if (_continue) {
-        console.log("AAAAAA");
+  
         this.authenticationStore
           .newUser(this.email, this.password, this.username)
           .then((error) => {
