@@ -22,8 +22,8 @@
 
 <script>
 import { mapStores } from "pinia";
-import { useUsersStore } from "../stores/users";
-import { useAuthenticationStore } from "../stores/authentication";
+import { useUsersStore } from "../../stores/users";
+import { useAuthenticationStore } from "../../stores/authentication";
 export default {
   watch:{
     currentUser(){

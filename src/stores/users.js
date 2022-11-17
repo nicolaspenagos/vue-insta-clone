@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { getDatabase, set, ref, get } from "firebase/database";
+import { useAuthenticationStore } from "./authentication";
+
 ///// OPTIONS STORE
 export const useUsersStore = defineStore("users", {
     state: () => ({
@@ -224,6 +226,22 @@ export const useUsersStore = defineStore("users", {
         },
         clearShowLikes() {
             this.loggedUserLikesArray = [];
+        },
+        deleteUserInfo() {
+
+
+
+            console.log('1');
+            useAuthenticationStore().goToLogin();
+            set(ref(getDatabase(), 'users/' + this.loggedUser.uid), null).then(() => {
+
+
+                useAuthenticationStore().deleteAccount();
+
+
+
+            });
+
         }
 
 

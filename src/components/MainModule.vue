@@ -10,7 +10,16 @@
         <div class="info__details">
           <h3 class="username">{{ username }}</h3>
           <h4 class="tag">{{ email }}</h4>
+          <div class="row" v-if="this.usersStore.getCurrentUser.uid==this.usersStore.getLoggedUser.uid">
+          
+            <p v-if="deleteAccount"  class="delete">Are you sure?</p>
+            <p v-if="deleteAccount" class="delete delete--clickable" @click="deleteUser">Yes</p>
+            <p v-if="deleteAccount"  class="delete delete--clickable" @click="alterDelete">No</p>
+            <p v-else class="delete delete--clickable" @click="alterDelete">Delete account</p>
+          </div>
+       
         </div>
+      
       </div>
       <div class="info__account row">
         <div class="row info__account__item">
@@ -25,6 +34,7 @@
           <h3 class="subtitle">{{ posts }}</h3>
           <p>posts</p>
         </div>
+     
       </div>
     </section>
     <div class="sepline"></div>
@@ -78,6 +88,9 @@ import Post from "./Post.vue";
 export default {
   props: ["update"],
   methods: {
+    deleteUser(){
+      this.usersStore.deleteUserInfo();
+    },
     search(){
       if(this.searchValue!="")
         this.usersStore.search(this.searchValue)
@@ -147,6 +160,9 @@ export default {
       this.sortKey = "";
       this.arrayToShow = JSON.parse(JSON.stringify(this.currentsPostsArray));
     },
+    alterDelete(){
+      this.deleteAccount = !this.deleteAccount;
+    }
   },
 
   watch: {
@@ -201,7 +217,8 @@ export default {
       filterKey: "",
       filterValue: "",
       sortKey: "",
-      searchValue:""
+      searchValue:"",
+      deleteAccount:false
     };
   },
   computed: {
@@ -314,6 +331,18 @@ export default {
 .tag {
   font-weight: 400;
   margin-top: -5px;
+}
+
+.delete{
+  color: #FF005D;
+  font-size: small;
+  margin-right: 10px;
+  &--clickable{
+    cursor: pointer;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
 }
 
 .subtitle {

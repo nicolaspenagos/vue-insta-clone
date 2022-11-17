@@ -31,7 +31,7 @@
 import LoginPhoto from "../components/LoginPhoto.vue";
 import LoginModule from "../components/LoginModule.vue";
 import draggable from "vuedraggable";
-import HeaderModule from "../components/HeaderModule.vue";
+import HeaderModule from "../components/HeaderModule/HeaderModule.vue";
 
 
 export default {

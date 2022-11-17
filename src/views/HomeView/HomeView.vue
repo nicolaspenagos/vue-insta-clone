@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import HeaderModule from "../components/HeaderModule.vue";
-import MainModule from "../components/MainModule.vue";
-import Modal from "../components/Modal.vue";
+import HeaderModule from "../../components/HeaderModule/HeaderModule.vue";
+import MainModule from "../../components/MainModule.vue";
+import Modal from "../../components/Modal.vue";
 import { mapStores } from "pinia";
-import { useUsersStore } from "../stores/users";
+import { useUsersStore } from "../../stores/users";
 export default {
   components: { HeaderModule, MainModule, Modal },
   computed:{

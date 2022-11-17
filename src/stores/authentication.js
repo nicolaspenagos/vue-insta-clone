@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, deleteUser } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { getDatabase, ref as ref_db, set } from "firebase/database";
 import { getStorage, ref as ref_st, uploadBytes, getDownloadURL } from "firebase/storage";
-import { routerKey } from "vue-router";
+
 import router from "@/router";
 
 
@@ -120,6 +120,17 @@ export const useAuthenticationStore = defineStore("authentication", {
 
         goToLogin() {
             router.replace('/');
+        },
+        deleteAccount() {
+
+            const userToRemove = auth.currentUser;
+
+            deleteUser(userToRemove).then(() => {
+
+
+            }).catch((error) => {
+
+            });
         }
 
     },
