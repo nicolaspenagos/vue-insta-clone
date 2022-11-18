@@ -83,11 +83,11 @@
               <div v-for="(comment, index) in comments" :key="index" class="row comment">
                 <img class="comment__pic" :src="comment.pic"/>
                 <p v-if="comment.commentId!=this.editId" class="comment__text">{{comment.text}}</p>
-                <input v-if="edit  && comment.commentId==this.editId" class="input comment__input" placeholder="New comment"/>
+                <input v-model="editCommentText" v-if="edit  && comment.commentId==this.editId" class="input comment__input" placeholder="New comment"/>
                 <div>
                   <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid && !edit && comment.commentId!=this.editId" class="comment__btn comment__x" @click="deleteComment(comment.commentId)">X</div>
                   <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid && !edit && comment.commentId!=this.editId" class="comment__btn comment__edit" @click="toEdit(comment.commentId)">Edit</div>
-                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid&& edit && comment.commentId==this.editId" class="comment__btn comment__save">Save</div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid&& edit && comment.commentId==this.editId" class="comment__btn comment__save" @click="editComment(comment.commentId)">Save</div>
                   <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid&& edit && comment.commentId==this.editId" class="comment__btn comment__cancel" @click="toCancel">Cancel</div>
                   <div  class="comment__username">{{comment.authorName}}</div>
              
@@ -179,6 +179,14 @@ export default {
     titleColor: String,
   },
   methods: {
+    
+    editComment(id){
+      this.usersStore.editComment(id, this.editCommentText);
+      this.editCommentText = "";
+      this.edit = false;
+      this.editId = "";
+
+    },
     toCancel(){
       this.edit=false;
       this.editId = "";
@@ -368,7 +376,9 @@ export default {
       newComment: "",
       selectedPostId: "",
       edit:false,
-      editId:""
+      editId:"",
+      newTest:"",
+      editCommentText:""
     };
   },
   mounted() {

@@ -29,6 +29,36 @@ export const useUsersStore = defineStore("users", {
     },
     actions: {
 
+        editComment(commentId, newtext) {
+
+            console.log(commentId + " " + newtext);
+
+            let index = -1;
+            for (let i = 0; i < this.currentUser.posts.length && index == -1; i++) {
+                let currentPost = this.currentUser.posts[i];
+
+                if (currentPost.comments) {
+
+                    for (let j = 0; j < currentPost.comments.length && index == -1; j++) {
+
+                        if (currentPost.comments[j].commentId == commentId) {
+                            currentPost.comments[j].text = newtext;
+                            this.selectedPost.comments[j].text = newtext;
+                            index = 1;
+                        }
+                    }
+                }
+
+
+            }
+
+            if (this.currentUser.uid == this.loggedUser.uid) {
+                this.save();
+            } else {
+                this.commentuser = this.currentUser;
+            }
+
+        },
         updateLoggedUserLikesArray() {
 
             let arr = [];
@@ -308,10 +338,7 @@ export const useUsersStore = defineStore("users", {
                         console.log("3");
                         if (currentPost.comments[j].commentId == idToDelete) {
                             console.log(idToDelete);
-                            // let temp = currentPost.comments.pop();
-                            // if (temp.commentId != idToDelete) {
-                            //    currentPost.comments[j] = temp;
-                            // }
+
                             if (j > -1) { // only splice array when item is found
                                 currentPost.comments.splice(j, 1); // 2nd parameter means remove one item only
                             }
@@ -345,4 +372,5 @@ export const useUsersStore = defineStore("users", {
 
 
     },
+
 });
