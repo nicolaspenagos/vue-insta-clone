@@ -82,11 +82,15 @@
             <div class="commentList">
               <div v-for="(comment, index) in comments" :key="index" class="row comment">
                 <img class="comment__pic" :src="comment.pic"/>
-                <p class="comment__text">{{comment.text}}</p>
+                <p v-if="comment.commentId!=this.editId" class="comment__text">{{comment.text}}</p>
+                <input v-if="edit  && comment.commentId==this.editId" class="input comment__input" placeholder="New comment"/>
                 <div>
-                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid" class="comment__btn comment__x">X</div>
-                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid" class="comment__btn comment__edit">Edit</div>
-                  <div class="comment__username">{{comment.authorName}}</div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid && !edit && comment.commentId!=this.editId" class="comment__btn comment__x" @click="deleteComment(comment.commentId)">X</div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid && !edit && comment.commentId!=this.editId" class="comment__btn comment__edit" @click="toEdit(comment.commentId)">Edit</div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid&& edit && comment.commentId==this.editId" class="comment__btn comment__save">Save</div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid&& edit && comment.commentId==this.editId" class="comment__btn comment__cancel" @click="toCancel">Cancel</div>
+                  <div  class="comment__username">{{comment.authorName}}</div>
+             
                 </div>
               </div>
             </div>
@@ -175,6 +179,20 @@ export default {
     titleColor: String,
   },
   methods: {
+    toCancel(){
+      this.edit=false;
+      this.editId = "";
+
+    },
+    toEdit(id){
+      this.edit=true;
+      this.editId = id;
+
+    },
+    deleteComment(id){
+
+      this.usersStore.deleteComment(id);
+    },
     showLikes() {
       let msgTemplate = "";
       this.usersStore.getSelectedPost.likes.forEach((id) => {
@@ -287,7 +305,7 @@ export default {
     },
     postComment() {
       if(this.newComment.trim()!=""){
-        this.usersStore.addComment(this.newComment, this.selectedPostId);
+        this.usersStore.addComment(this.newComment, this.selectedPostId, this.uuidv4());
       this.newComment = "";
       }
 
@@ -349,7 +367,8 @@ export default {
       file: "",
       newComment: "",
       selectedPostId: "",
-
+      edit:false,
+      editId:""
     };
   },
   mounted() {
@@ -515,6 +534,7 @@ export default {
   &__text{
     margin-left: 10px;
   }
+
   &__btn{
     position: absolute;
     top: 0;
@@ -528,6 +548,16 @@ export default {
   }
   &__edit{
     right: 15px;
+  }  
+  &__cancel{
+    right:35px;
+  }
+  &__input{
+    width: 230px;
+    height: 25px;
+    margin-left: 7px;
+    margin-top: 10px;
+    font-size: 10px;
   }
 
 }

@@ -243,7 +243,7 @@ export const useUsersStore = defineStore("users", {
             });
 
         },
-        addComment(comment, postId) {
+        addComment(comment, postId, commentId) {
 
             comment = comment.trim();
 
@@ -255,7 +255,7 @@ export const useUsersStore = defineStore("users", {
                 }
             }
 
-            let newComment = { authorId: this.loggedUser.uid, text: comment, authorName: this.loggedUser.username, pic: this.loggedUser.url };
+            let newComment = { authorId: this.loggedUser.uid, text: comment, authorName: this.loggedUser.username, pic: this.loggedUser.url, commentId };
 
             let comments = this.currentUser.posts[index].comments;
             if (this.currentUser.posts[index].comments) {
@@ -281,7 +281,7 @@ export const useUsersStore = defineStore("users", {
         },
         saveComment() {
 
-            console.log(this.commentuser);
+
             if (this.commentuser != null) {
                 const db = getDatabase();
 
@@ -293,6 +293,51 @@ export const useUsersStore = defineStore("users", {
                 });
 
             }
+
+        },
+        deleteComment(idToDelete) {
+
+            console.log(idToDelete);
+            let index = -1;
+            for (let i = 0; i < this.currentUser.posts.length && index == -1; i++) {
+                let currentPost = this.currentUser.posts[i];
+                console.log("1");
+                if (currentPost.comments) {
+
+                    for (let j = 0; j < currentPost.comments.length && index == -1; j++) {
+                        console.log("3");
+                        if (currentPost.comments[j].commentId == idToDelete) {
+                            console.log(idToDelete);
+                            // let temp = currentPost.comments.pop();
+                            // if (temp.commentId != idToDelete) {
+                            //    currentPost.comments[j] = temp;
+                            // }
+                            if (j > -1) { // only splice array when item is found
+                                currentPost.comments.splice(j, 1); // 2nd parameter means remove one item only
+                            }
+                            this.selectedPost.comments = currentPost.comments;
+                            index = 1;
+                        }
+                    }
+                }
+
+
+            }
+
+
+
+            if (this.currentUser.uid == this.loggedUser.uid) {
+                this.save();
+            } else {
+                this.commentuser = this.currentUser;
+            }
+
+
+
+
+
+
+
 
         }
 
