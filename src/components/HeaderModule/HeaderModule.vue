@@ -49,10 +49,14 @@ export default {
     },
     logout() {
       // this.usersStore.logout();
+      this.usersStore.saveComment();
       this.usersStore.updateUserChanged().then(
         ()=>{
 
-          this.authenticationStore.logOut();
+          ()=>{
+        
+                this.authenticationStore.logOut();
+              }
         }
       );
       
@@ -62,6 +66,7 @@ export default {
       this.usersStore.setUser(this.usersStore.getLoggedUser);
       this.$emit("cleanSearch");
       this.usersStore.updateUserChanged();
+      this.usersStore.saveComment();
     },
     goToLikes(){
       this.usersStore.updateLoggedUserLikesArray();

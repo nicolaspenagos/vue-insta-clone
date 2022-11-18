@@ -285,6 +285,11 @@ export default {
       arr.forEach((p) => {
         this.currentsPostsArray.push({ ...p });
 
+        let comments = [];
+
+        if(p.comments)
+          comments = p.comments;
+
         this.arrayToShow.push({
           country: p.country,
           date: p.date,
@@ -292,10 +297,14 @@ export default {
           image: p.image,
           likes: p.likes,
           place: p.place,
-          postId:p.postId
+          postId:p.postId, 
+          comments
         });
       });
     }
+
+  
+  
   },
   components: { Post },
 };

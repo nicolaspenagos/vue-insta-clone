@@ -4,65 +4,94 @@
       <div class="modal">
         <div class="modal-container modal-container--post">
           <h3>Posts you've liked:</h3>
-          <p v-if="likesArray.length==0">You haven't liked any post yet</p>
-           <div v-for="(item, index) of likesArray" :key="index" class="likedPost row">
+          <p v-if="likesArray.length == 0">You haven't liked any post yet</p>
+          <div
+            v-for="(item, index) of likesArray"
+            :key="index"
+            class="likedPost row"
+          >
             <div class="row">
-              <img :src="item.userImg" class="likedPost__userImg"/>
-            <div>
-              <strong>{{item.username}}</strong><br>
-                {{item.title}}
+              <img :src="item.userImg" class="likedPost__userImg" />
+              <div>
+                <strong>{{ item.username }}</strong
+                ><br />
+                {{ item.title }}
+              </div>
             </div>
-            </div>
-         
-            <img :src="item.postImg" class="likedPost__postImg"/> 
+
+            <img :src="item.postImg" class="likedPost__postImg" />
           </div>
         </div>
       </div>
-
     </div>
     <div v-else>
       <div class="modal" v-if="selectedPost">
         <aside class="modal-container modal-container--left">
           <img :src="this.seletecImage" class="imageDetail" />
         </aside>
-        <aside class="modal-container modal-container--right">
-          <div class="row imageDetail__userrow">
+        <div>
+          <aside class="modal-container modal-container--right">
             <div class="row imageDetail__userrow">
-              <img :src="userPic" class="userPic userPic--detail" />
-              <h3 class="text text--black text--username">
-                {{ this.usersStore.getCurrentUser.username }}
-              </h3>
-            </div>
-            <button class="text x text--blue" @click="cerrarModal">
-              Close
-            </button>
-          </div>
-          <div class="input--place s-title">{{ this.selectedPlace }}</div>
-          <div class="s-subtitle input--country">
-            {{ this.selectedCountry }}
-          </div>
-          <div class="input--description s-des">
-            {{ this.des }}
-          </div>
-          <div class="row row--button">
-            <div class="s-subtitle input--date">{{ this.date }}</div>
-            <div class="row">
-              <button
-                class="text x text--blue showLikesBtn"
-                @click="showLikes"
-                v-if="likesCount() > 0"
-              >
-                See likes
+              <div class="row imageDetail__userrow">
+                <img :src="userPic" class="userPic userPic--detail" />
+                <h3 class="text text--black text--username">
+                  {{ this.usersStore.getCurrentUser.username }}
+                </h3>
+              </div>
+              <button class="text x text--blue" @click="cerrarModal">
+                Close
               </button>
-              <div class="div--likes s-likes">{{ likesCount() }}</div>
-              <img
-                :src="heartPath()"
-                class="heart heart--likes"
-                @click="addLike"
+            </div>
+            <div class="input--place s-title">{{ this.selectedPlace }}</div>
+            <div class="s-subtitle input--country">
+              {{ this.selectedCountry }}
+            </div>
+            <div class="input--description s-des">
+              {{ this.des }}
+            </div>
+            <div class="row row--button">
+              <div class="s-subtitle input--date">{{ this.date }}</div>
+              <div class="row">
+                <button
+                  class="text x text--blue showLikesBtn"
+                  @click="showLikes"
+                  v-if="likesCount() > 0"
+                >
+                  See likes
+                </button>
+                <div class="div--likes s-likes">{{ likesCount() }}</div>
+                <img
+                  :src="heartPath()"
+                  class="heart heart--likes"
+                  @click="addLike"
+                />
+              </div>
+            </div>
+          </aside>
+          <div class="comments modal-container">
+            <div class="row">
+              <input
+                v-model="newComment"
+                placeholder="Add comment"
+                class="input input--comment"
               />
+              <button class="button button--modal" @click="postComment">
+                Post
+              </button>
+            </div>
+            <div class="commentList">
+              <div v-for="(comment, index) in comments" :key="index" class="row comment">
+                <img class="comment__pic" :src="comment.pic"/>
+                <p class="comment__text">{{comment.text}}</p>
+                <div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid" class="comment__btn comment__x">X</div>
+                  <div v-if="comment.authorId==this.usersStore.getLoggedUser.uid" class="comment__btn comment__edit">Edit</div>
+                  <div class="comment__username">{{comment.authorName}}</div>
+                </div>
+              </div>
             </div>
           </div>
-        </aside>
+        </div>
       </div>
       <div class="modal" v-else>
         <aside class="modal-container modal-container--left">
@@ -131,6 +160,7 @@ import { computed } from "@vue/reactivity";
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
 import LikedPost from "./LikedPost.vue";
+import { Comment } from "vue";
 import {
   getStorage,
   ref as ref_st,
@@ -255,13 +285,21 @@ export default {
         alert("Please fill all the data.");
       }
     },
+    postComment() {
+      if(this.newComment.trim()!=""){
+        this.usersStore.addComment(this.newComment, this.selectedPostId);
+      this.newComment = "";
+      }
+
+
+    },
   },
   computed: {
     ...mapStores(useUsersStore),
     titleClass() {
       return `title--${this.titleColor}`;
     },
-    likesArray(){
+    likesArray() {
       console.log(this.usersStore.getShowLikes);
       return this.usersStore.getShowLikes;
     },
@@ -282,8 +320,11 @@ export default {
       }
 
       return "./user.png";
-    },  likesArray(){
+    },
+    likesArray() {
       return this.usersStore.getLikesArray;
+    },comments(){
+      return this.usersStore.getSelectedPost.comments;
     }
   },
   data() {
@@ -306,11 +347,14 @@ export default {
       des: "",
       date: "",
       file: "",
+      newComment: "",
+      selectedPostId: "",
+
     };
   },
   mounted() {
     this.selectedPost = this.usersStore.getSelectedPost != null;
-   // console.log(this.usersStore.getLikesArray);
+    // console.log(this.usersStore.getLikesArray);
     if (this.selectedPost) {
       this.seletecImage = this.usersStore.getSelectedPost.image;
       this.selectedLikes = this.usersStore.getSelectedPost.likes;
@@ -318,12 +362,15 @@ export default {
       this.selectedPlace = this.usersStore.getSelectedPost.place;
       this.des = this.usersStore.getSelectedPost.description;
       this.date = this.usersStore.getSelectedPost.date;
+      this.selectedPostId = this.usersStore.getSelectedPost.postId;
+
     }
-  },watch:{
-    likesArray(){
+  },
+  watch: {
+    likesArray() {
       console.log(this.usersStore.getLikesArray);
-    }
-  }
+    },
+  },
 };
 </script> 
 <style scoped lang="scss">
@@ -352,6 +399,9 @@ export default {
   &--likes {
     width: 50px;
     margin-bottom: 20px;
+  }
+  &--comment {
+    margin-right: 5px;
   }
 }
 .text--username {
@@ -397,7 +447,7 @@ export default {
   color: purple;
 }
 
-.likedPost{
+.likedPost {
   background-color: white;
   margin-bottom: 10px;
   margin-top: 10px;
@@ -405,26 +455,24 @@ export default {
   align-items: center;
   justify-content: space-between;
 
-  &__userImg{
+  &__userImg {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     margin-right: 10px;
   }
-  &__postImg{
-      width: 80px;
+  &__postImg {
+    width: 80px;
     height: 80px;
     margin-left: 10px;
   }
 }
-.modal-container--post{
-
+.modal-container--post {
   padding: 20px;
   background-color: rgb(242, 242, 242) !important;
   height: 500px;
-  overflow-y:scroll ;
+  overflow-y: scroll;
   min-width: 364px;
-
 }
 .title--blue {
   color: darkblue;
@@ -440,6 +488,49 @@ export default {
   }
 }
 
+.comments {
+  width: 390px;
+  padding: 15px;
+}
+
+.comment{
+  margin-bottom: 10px;
+  margin-top:10px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  max-height: 250px;
+  overflow-y: scroll;
+  &__username{
+    position: absolute;
+    top:0;
+    left: 50px;
+    font-size: 9px;
+    color: gray;
+  }
+  &__pic{
+    width: 40px;
+    border-radius: 50%;
+  }
+  &__text{
+    margin-left: 10px;
+  }
+  &__btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    color:#3f94ef ;
+    font-size: 11px;
+    cursor: pointer;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+  &__edit{
+    right: 15px;
+  }
+
+}
 .backdrop {
   display: flex;
   align-items: center;

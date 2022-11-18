@@ -15,7 +15,9 @@ export const useUsersStore = defineStore("users", {
         loggedUser: null,
         lastestUserChanged: null,
         showLikes: false,
-        loggedUserLikesArray: []
+        loggedUserLikesArray: [],
+        commentId: '',
+        commentuser: null
     }),
     getters: {
         getUsers: (state) => [...state.users],
@@ -153,15 +155,13 @@ export const useUsersStore = defineStore("users", {
             let stop = false;
             for (let i = 0; i < this.users.length && !false; i++) {
                 let posts_user_i = this.users[i].posts;
-                console.log("\n" + this.users[i].username);
+
 
                 if (posts_user_i) {
                     for (let j = 0; j < posts_user_i.length && !stop; j++) {
                         if (posts_user_i[j].postId == idPost) {
                             stop = true;
-                            console.log("2.: postsLikes:" + this.users[i].posts[j]);
-                            console.log(this.users[i].posts[j]);
-                            console.log(this.users[i].posts[j].likes);
+
                             if (this.users[i].posts[j].likes) {
                                 if (!this.users[i].posts[j].likes.includes(loggUserId)) {
                                     this.users[i].posts[j].likes.push(loggUserId);
@@ -174,8 +174,7 @@ export const useUsersStore = defineStore("users", {
                                     for (let k = 0; k < this.users[i].posts[j].likes.length && !secondStop; k++) {
 
                                         if (this.users[i].posts[j].likes[k] == loggUserId) {
-                                            console.log("Buscado" + loggUserId);
-                                            console.log("Array" + this.users[i].posts[j].likes);
+
 
 
                                             secondStop = true;
@@ -188,7 +187,7 @@ export const useUsersStore = defineStore("users", {
                                     }
                                     //this.users[i].posts[j].likes.push(loggUserId);
                                 }
-                                console.log(this.users[i].posts[j].likes);
+
                             } else {
                                 this.users[i].posts[j] = {...this.users[i].posts[j], likes: [loggUserId] }
                             }
@@ -217,6 +216,7 @@ export const useUsersStore = defineStore("users", {
                     ...this.lastestUserChanged
                 }).then(() => {
                     this.lastestUserChanged = null;
+
                     return
                 });
             }
@@ -241,6 +241,58 @@ export const useUsersStore = defineStore("users", {
 
 
             });
+
+        },
+        addComment(comment, postId) {
+
+            comment = comment.trim();
+
+            let index = -1;
+            for (let i = 0; i < this.currentUser.posts.length && index == -1; i++) {
+                let currentPost = this.currentUser.posts[i];
+                if (currentPost.postId == postId) {
+                    index = i;
+                }
+            }
+
+            let newComment = { authorId: this.loggedUser.uid, text: comment, authorName: this.loggedUser.username, pic: this.loggedUser.url };
+
+            let comments = this.currentUser.posts[index].comments;
+            if (this.currentUser.posts[index].comments) {
+                this.currentUser.posts[index].comments.push(newComment);
+
+            } else {
+                comments = [];
+                comments.push(newComment)
+                let newPost = this.currentUser.posts[index];
+                this.currentUser.posts[index] = {...newPost, comments }
+
+            }
+
+            this.selectedPost.comments = this.currentUser.posts[index].comments;
+            if (this.currentUser.uid == this.loggedUser.uid)
+                this.save();
+            else {
+                this.commentuser = this.currentUser;
+            }
+
+            console.log(this.commentuser);
+
+        },
+        saveComment() {
+
+            console.log(this.commentuser);
+            if (this.commentuser != null) {
+                const db = getDatabase();
+
+                set(ref(db, 'users/' + this.commentuser.uid), {
+                    ...this.commentuser
+                }).then(() => {
+                    this.commentuser = null;
+                    return
+                });
+
+            }
 
         }
 
