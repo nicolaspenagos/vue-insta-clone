@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, deleteUser } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, deleteUser, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { getDatabase, ref as ref_db, set } from "firebase/database";
 import { getStorage, ref as ref_st, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -20,6 +20,7 @@ export const useAuthenticationStore = defineStore("authentication", {
     }),
     actions: {
         signIn(email, password) {
+
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
@@ -131,6 +132,19 @@ export const useAuthenticationStore = defineStore("authentication", {
             }).catch((error) => {
 
             });
+        },
+        recoverAccount(email) {
+
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    alert('Password reset email sent!');
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    // ..
+                });
+
         }
 
     },

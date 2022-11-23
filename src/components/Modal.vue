@@ -160,11 +160,10 @@
 </template>
 
 <script>
-import { computed } from "@vue/reactivity";
+
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
-import LikedPost from "./LikedPost.vue";
-import { Comment } from "vue";
+
 import {
   getStorage,
   ref as ref_st,

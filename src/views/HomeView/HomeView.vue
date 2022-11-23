@@ -1,14 +1,9 @@
 <template>
   <main class="home">
     <Modal
-   
-    
       v-if="showModal1"
       @close="closeModal1"
     >
- 
-   
- 
     </Modal>
     <HeaderModule @open="openModal1"></HeaderModule>
     <MainModule :update="update" @open="openModal1"></MainModule>

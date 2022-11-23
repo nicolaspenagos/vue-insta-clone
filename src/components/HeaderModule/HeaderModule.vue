@@ -50,16 +50,14 @@ export default {
     logout() {
       // this.usersStore.logout();
       this.usersStore.saveComment();
-      this.usersStore.updateUserChanged().then(
-        ()=>{
+      this.usersStore.updateUserChanged();
 
-          ()=>{
+
+   
         
-                this.authenticationStore.logOut();
-              }
-        }
-      );
-      
+      this.authenticationStore.logOut();
+              
+     
       
     },
     goToHome() {

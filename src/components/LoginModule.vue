@@ -13,7 +13,7 @@
       <input
         placeholder="username"
         class="input usernameInput"
-        v-if="singUp"
+        v-if="singUp && !recoverAccount"
         name="Username"
         v-model="username"
       />
@@ -24,9 +24,10 @@
         type="password"
         name="Password"
         v-model="password"
+        v-if="!recoverAccount"
       />
 
-      <div v-if="singUp" class="userPic">
+      <div v-if="singUp && !recoverAccount" class="userPic">
         <label class="userPic--text"> Load profile picture </label>
         <input
           name="File"
@@ -38,10 +39,16 @@
         />
       </div>
 
-      <button class="button loginButton" v-on:click="auth">
+      <button class="button loginButton" v-on:click="auth" v-if=" !recoverAccount">
         {{ text[0] }}
       </button>
-      <p class="text text--red msg" v-if="wrongCredentials">
+      <button class="button loginButton"  v-if="recoverAccount" @click="()=>{this.authenticationStore.recoverAccount(this.email)}">
+          Recover Account
+      </button>
+      <p v-if="recoverAccount"  class="text text--blue msg" @click="()=>{this.recoverAccount=false}" >Go to login</p>
+      <p v-if="!recoverAccount && !singUp"  class="text text--blue msg" @click="()=>{this.recoverAccount=true}">Forgot password?</p>
+
+      <p class="text text--red msg" v-if="wrongCredentials && !recoverAccount">
         {{ credentialsMsg }}
       </p>
     </div>
@@ -99,6 +106,7 @@ export default {
       imageString: "",
       errorMsg: "",
       file: "",
+      recoverAccount: false
     };
   },
   mounted() {},

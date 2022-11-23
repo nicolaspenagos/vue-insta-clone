@@ -10,5 +10,6 @@ export default defineConfig({
     test: {
         globals: true,
         environment: 'happy-dom',
+        //exclude: [...configDefaults.exclude, 'src/firebase/config.js']
     },
 })

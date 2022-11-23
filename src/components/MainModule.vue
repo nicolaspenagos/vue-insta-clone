@@ -84,7 +84,7 @@
 <script>
 import { mapStores } from "pinia";
 import { useUsersStore } from "../stores/users";
-import Post from "./Post.vue";
+import Post from "./Post/Post.vue";
 export default {
   props: ["update"],
   methods: {
