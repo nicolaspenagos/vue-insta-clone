@@ -162,7 +162,7 @@
 <script>
 
 import { mapStores } from "pinia";
-import { useUsersStore } from "../stores/users";
+import { useUsersStore } from "../../stores/users";
 
 import {
   getStorage,

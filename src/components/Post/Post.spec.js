@@ -9,7 +9,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { useUsersStore } from "../../stores/users";
 
 
-describe('post', () => {
+describe('Post test', () => {
 
     vi.mock("@/router", () => {
 
@@ -48,6 +48,7 @@ describe('post', () => {
 
         })
 
+        expect(wrapper).toBeTruthy();
         const store = useUsersStore();
 
     })

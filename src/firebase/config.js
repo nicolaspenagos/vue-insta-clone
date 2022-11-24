@@ -23,6 +23,7 @@ const database = getDatabase(app);
 let loggedUser = null;
 
 onAuthStateChanged(auth, (user) => {
+
     const authStore = useAuthenticationStore()
     const userStore = useUsersStore();
 

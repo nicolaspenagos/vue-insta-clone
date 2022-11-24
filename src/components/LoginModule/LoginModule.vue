@@ -61,8 +61,8 @@
 <script>
 import draggable from "vuedraggable";
 import { mapStores } from "pinia";
-import { useUsersStore } from "../stores/users";
-import { useAuthenticationStore } from "../stores/authentication";
+import { useUsersStore } from "../../stores/users";
+import { useAuthenticationStore } from "../../stores/authentication";
 
 import { getDatabase, ref, child, get } from "firebase/database";
 

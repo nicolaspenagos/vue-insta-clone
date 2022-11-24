@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import LoginPhoto from "../components/LoginPhoto.vue";
-import LoginModule from "../components/LoginModule.vue";
+import LoginPhoto from "../../components/LoginPhoto/LoginPhoto.vue";
+import LoginModule from "../../components/LoginModule/LoginModule.vue";
 import draggable from "vuedraggable";
-import HeaderModule from "../components/HeaderModule/HeaderModule.vue";
+import HeaderModule from "../../components/HeaderModule/HeaderModule.vue";
 
 
 export default {

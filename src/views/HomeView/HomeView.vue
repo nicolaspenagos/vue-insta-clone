@@ -13,7 +13,7 @@
 <script>
 import HeaderModule from "../../components/HeaderModule/HeaderModule.vue";
 import MainModule from "../../components/MainModule.vue";
-import Modal from "../../components/Modal.vue";
+import Modal from "../../components/Modal/Modal.vue";
 import { mapStores } from "pinia";
 import { useUsersStore } from "../../stores/users";
 export default {
